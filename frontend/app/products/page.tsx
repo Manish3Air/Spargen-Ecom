@@ -46,7 +46,7 @@ export default function ProductsPage() {
               <Link href={`/products/${product.id}`} className="w-full">
                 <div className="relative w-full cursor-pointer">
                   <Image
-                    src={product.image}
+                    src={typeof product.image === "string" ? product.image : product.image[0] || "/placeholder.png"}
                     alt={product.name}
                     width={128}
                     height={128}
