@@ -1,9 +1,9 @@
-import express from 'express';
-import { getDashboardStats } from '../controllers/analyticsController.js';
-import { authenticate, isAdmin } from '../middleware/authMiddleware.js';
+const express = require('express');
+const { getDashboardStats } = require('../controllers/analyticsController.js');
+const { protect, isAdmin } = require('../middlewares/authMiddleware.js');
 
 const router = express.Router();
 
-router.get('/', authenticate, isAdmin, getDashboardStats);
+router.get('/', protect, isAdmin, getDashboardStats);
 
-export default router;
+module.exports = router;

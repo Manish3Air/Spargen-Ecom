@@ -8,7 +8,7 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-const analyticsRoutes = require("./routes/analyticsRoutes");
+const analyticsRoutes = require("./routes/analyticsRoute");
 
 dotenv.config();
 

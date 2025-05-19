@@ -1,6 +1,6 @@
-import { Review } from '../models/Review.js';
+const { Review } = require('../models/Review.js');
 
-export const addReview = async (req, res) => {
+ const addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
     const review = new Review({
@@ -16,11 +16,16 @@ export const addReview = async (req, res) => {
   }
 };
 
-export const getProductReviews = async (req, res) => {
+ const getProductReviews = async (req, res) => {
   try {
     const reviews = await Review.find({ productId: req.params.productId }).populate('userId', 'name');
     res.json(reviews);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
+};
+
+module.exports = {
+  addReview,
+  getProductReviews,
 };

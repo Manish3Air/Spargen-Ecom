@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -76,8 +76,8 @@ export default function ProductDetailPage() {
   const { isWishlisted, addToWishlist, removeFromWishlist } = useWishlist();
 
   // Image Zoom states
-  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
-  const zoomRef = useRef<HTMLDivElement>(null);
+  // const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  // const zoomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("products");
@@ -98,20 +98,20 @@ export default function ProductDetailPage() {
   const images = Array.isArray(product.image) ? product.image : [product.image];
 
   // Handle zoom mouse movement
-  function handleMouseMove(e: React.MouseEvent) {
-    if (!zoomRef.current) return;
-    const rect = zoomRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    zoomRef.current.style.backgroundPosition = `${x}% ${y}%`;
-  }
+  // function handleMouseMove(e: React.MouseEvent) {
+  //   if (!zoomRef.current) return;
+  //   const rect = zoomRef.current.getBoundingClientRect();
+  //   const x = ((e.clientX - rect.left) / rect.width) * 100;
+  //   const y = ((e.clientY - rect.top) / rect.height) * 100;
+  //   zoomRef.current.style.backgroundPosition = `${x}% ${y}%`;
+  // }
 
   // Reset zoom when mouse leaves
-  function handleMouseLeave() {
-    if (!zoomRef.current) return;
-    zoomRef.current.style.backgroundPosition = "center";
-    setZoomedImage(null);
-  }
+  // function handleMouseLeave() {
+  //   if (!zoomRef.current) return;
+  //   zoomRef.current.style.backgroundPosition = "center";
+  //   setZoomedImage(null);
+  // }
 
   return (
     <main className="p-6 bg-[#e0e5ec] min-h-screen">

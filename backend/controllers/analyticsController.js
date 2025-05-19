@@ -1,8 +1,8 @@
-import { Product } from '../models/Product.js';
-import { Order } from '../models/Order.js';
-import { User } from '../models/User.js';
+const { Product } = require('../models/Product.js');
+const { Order } = require('../models/Order.js');
+const { User } = require('../models/User.js');
 
-export const getDashboardStats = async (req, res) => {
+ const getDashboardStats = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
     const totalOrders = await Order.countDocuments();
@@ -20,4 +20,8 @@ export const getDashboardStats = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+module.exports = {
+  getDashboardStats
 };

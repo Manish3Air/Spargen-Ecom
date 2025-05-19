@@ -1,6 +1,6 @@
-import User from '../models/User.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+const User = require('../models/User.js');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const generateToken = (userId, role) => {
   return jwt.sign({ userId, role }, process.env.JWT_SECRET, {
@@ -8,7 +8,7 @@ const generateToken = (userId, role) => {
   });
 };
 
-export const register = async (req, res) => {
+ const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
@@ -25,7 +25,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -41,3 +41,9 @@ export const login = async (req, res) => {
     res.status(500).json({ message: 'Login failed', error: err.message });
   }
 };
+
+module.exports = {
+  register,
+  login,
+};
+

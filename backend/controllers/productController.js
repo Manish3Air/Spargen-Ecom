@@ -1,7 +1,7 @@
-import Product from "../models/Product.js";
+const Product = require("../models/Product.js");
 
 // @desc Get all products
-export const getAllProducts = async (req, res) => {
+ const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
     res.json(products);
@@ -11,7 +11,7 @@ export const getAllProducts = async (req, res) => {
 };
 
 // @desc Get a single product
-export const getProductById = async (req, res) => {
+ const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ error: "Product not found" });
@@ -22,7 +22,7 @@ export const getProductById = async (req, res) => {
 };
 
 // @desc Create a new product (admin only)
-export const createProduct = async (req, res) => {
+ const createProduct = async (req, res) => {
   try {
     const product = new Product(req.body);
     const saved = await product.save();
@@ -33,7 +33,7 @@ export const createProduct = async (req, res) => {
 };
 
 // @desc Update a product (admin only)
-export const updateProduct = async (req, res) => {
+ const updateProduct = async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -46,7 +46,7 @@ export const updateProduct = async (req, res) => {
 };
 
 // @desc Delete a product (admin only)
-export const deleteProduct = async (req, res) => {
+ const deleteProduct = async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: "Product not found" });
@@ -54,4 +54,12 @@ export const deleteProduct = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Server Error" });
   }
+};
+
+module.exports = {
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
 };
