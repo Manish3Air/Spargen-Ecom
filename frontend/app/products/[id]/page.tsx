@@ -11,6 +11,7 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { Lens } from "@/components/magicui/lens";
 
 interface Product {
   id: string;
@@ -123,7 +124,7 @@ export default function ProductDetailPage() {
             spaceBetween={10}
             slidesPerView={1}
             loop={true}
-            autoplay={{ delay: 3000 }}
+            // autoplay={{ delay: 5000 }}
             pagination={{ clickable: true }}
             navigation={true}
             className="rounded-xl shadow-inner"
@@ -131,14 +132,21 @@ export default function ProductDetailPage() {
             {images.map((img, idx) => (
               <SwiperSlide key={idx}>
                 <div className="w-full h-[350px] flex justify-center items-center overflow-hidden rounded-xl cursor-zoom-in">
-                  <Image
-                    src={img}
-                    alt={product.name}
-                    width={400}
-                    height={400}
-                    className="object-contain transition-transform duration-300 ease-in-out hover:scale-125"
-                    draggable={false}
-                  />
+                  <Lens
+                    zoomFactor={2}
+                    lensSize={150}
+                    isStatic={false}
+                    ariaLabel="Zoom Area"
+                  >
+                    <Image
+                      src={img}
+                      alt={product.name}
+                      width={400}
+                      height={400}
+                      className="object-contain"
+                      draggable={false}
+                    />
+                  </Lens>
                 </div>
               </SwiperSlide>
             ))}

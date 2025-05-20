@@ -7,6 +7,7 @@ import { WishlistProvider } from "@/context/WishlistContext";
 import { AuthProvider } from "@/context/AuthContext";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Footer from "@/components/layout/Footer";
 
 
 const geistSans = Geist({
@@ -20,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MobileZone",
+  title: "Spargen-Ecom",
   description: "E-commerce site for mobiles & tablets",
 };
 
@@ -39,6 +40,7 @@ export default function RootLayout({
         <CartProvider>
           <Navbar />
           <main>{children}</main>
+          <Footer />
         </CartProvider>
         </WishlistProvider>
         </AuthProvider>

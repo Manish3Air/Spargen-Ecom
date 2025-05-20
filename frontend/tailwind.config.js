@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -8,6 +9,7 @@ module.exports = {
     extend: {
       boxShadow: {
         neumorphic: "8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff",
+        
       },
     },
   },

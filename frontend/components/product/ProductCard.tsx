@@ -25,7 +25,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
   const wishlisted = isWishlisted(product.id);
 
   return (
-    <div className="bg-[#e0e5ec] shadow-neumorphic hover:shadow-lg transition-shadow rounded-2xl py-8 w-full flex flex-col items-center text-center">
+    <div className="bg-white dark:bg-gray-900 shadow-neumorphic hover:shadow-lg transition-shadow rounded-2xl py-8 w-full flex flex-col items-center text-center">
       <div className="relative w-full px-5">
         <Link href={`/products/${product.id}`}>
           <div className="relative w-full h-[200px] cursor-pointer">
@@ -33,7 +33,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
               src={typeof product.image === "string" ? product.image : product.image[0] || "/placeholder.png"}
               alt={product.name}
               fill
-              className="object-contain rounded bg-white shadow-inner"
+              className="object-contain rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-inner"
             />
           </div>
         </Link>
@@ -46,12 +46,12 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
       </div>
 
       <Link href={`/products/${product.id}`}>
-        <h3 className="text-lg font-semibold text-gray-800 truncate w-full cursor-pointer">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white truncate w-full cursor-pointer">
           {product.name}
         </h3>
       </Link>
 
-      <p className="text-gray-600 mb-3 text-sm">${product.price.toFixed(2)}</p>
+      <p className="text-gray-700 dark:text-white mb-3 text-sm">₹{product.price.toFixed(2)}</p>
 
       <div className="flex justify-center items-center gap-2">
         <button
@@ -64,7 +64,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
               image: product.image,
             })
           }
-          className="bg-gradient-to-br from-[#d1d9e6] to-[#f0f4f8] shadow-neumorphic-inner hover:shadow-inner hover:scale-105 transition rounded-lg px-4 py-2 font-medium text-sm text-black"
+          className="bg-white dark:bg-black shadow-neumorphic-inner hover:shadow-inner hover:scale-105  dark:text-white transition rounded-lg px-4 py-2 font-medium text-sm text-black hover:bg-yellow-50 dark:hover:bg-gray-800 cursor-pointer"
         >
           🛒 Add to Cart
         </button>
@@ -75,9 +75,9 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
               ? removeFromWishlist(product.id)
               : addToWishlist({ ...product })
           }
-          className="bg-gradient-to-br from-[#d1d9e6] to-[#f0f4f8] rounded-lg px-4 py-2 text-center hover:scale-105 transition font-medium text-sm text-red-600"
+          className="bg-white hover:bg-yellow-50 rounded-lg px-4 py-2 text-center hover:scale-105 transition font-medium text-sm text-red-600 cursor-pointer"
         >
-          {wishlisted ? "💔 Remove from Wishlist" : "❤️ Add to Wishlist"}
+          {wishlisted ? "💔 Remove " : "❤️ Add to wishlist"}
         </button>
       </div>
     </div>

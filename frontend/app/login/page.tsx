@@ -21,6 +21,7 @@ export default function LoginPage() {
   };
 
   return (
+    
     <main className="min-h-screen flex items-center justify-center bg-[#e0e5ec]">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-neumorphic space-y-4 w-96">
         <h1 className="text-xl font-bold text-gray-800 text-center">Login</h1>
@@ -37,5 +38,6 @@ export default function LoginPage() {
         <button className="w-full bg-[#d1d9e6] hover:bg-gray-300 py-2 rounded font-medium text-gray-800">Login</button>
       </form>
     </main>
+    
   );
 }
