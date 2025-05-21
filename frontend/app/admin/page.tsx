@@ -37,7 +37,7 @@ export default function AdminDashboard() {
   if (!isAdmin) return null;
 
   return (
-    <main className="min-h-screen p-8 bg-[#e0e5ec]">
+    <main className="min-h-screen p-8 bg-[#f0f5ff] dark:black text-white dark:text-gray-900">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
         👨‍💼 Admin Dashboard
       </h1>

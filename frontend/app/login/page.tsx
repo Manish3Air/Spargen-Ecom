@@ -33,7 +33,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0a0a0a] px-4 py-12">
+    <main className="min-h-screen flex items-center justify-center bg-[#f0f5ff] dark:bg-[#0a0a0a] px-4 py-12">
       <form
         onSubmit={handleSubmit}
         className="bg-[#e0e5ec] dark:bg-gray-900 p-8 rounded-2xl shadow-neumorphic-inner dark:shadow-none w-full max-w-md space-y-6"
@@ -91,6 +91,12 @@ export default function LoginPage() {
             className="bg-blue-600 hover:bg-blue-700 text-white"
           />
         </div>
+        <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+        Do not have an acoount?
+        <a href="/register" className="ml-2 text-blue-500  hover:underline hover:text-blue-700">
+          Register
+        </a>
+      </p>
       </form>
     </main>
   );
@@ -110,6 +116,7 @@ function InputField({ label, type = "text", value, onChange }: InputFieldProps) 
       <input
         type={type}
         value={value}
+        placeholder="manish@tech.com"
         onChange={onChange}
         required
         className="w-full p-3 rounded-xl bg-[#f5f6fa] dark:bg-gray-800 shadow-inner text-sm text-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-200"
@@ -134,6 +141,7 @@ function PasswordField({ label, value, showPassword, toggleShow, onChange }: Pas
         <input
           type={showPassword ? "text" : "password"}
           value={value}
+          placeholder="********"
           onChange={onChange}
           required
           className="w-full p-3 rounded-xl bg-[#f5f6fa] dark:bg-gray-800 shadow-inner text-sm text-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-200 pr-10"

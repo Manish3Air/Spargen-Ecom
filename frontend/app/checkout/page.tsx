@@ -70,7 +70,7 @@ export default function CheckoutPage() {
   const discount = totalPrice - actualTotal;
 
   return (
-    <main className="p-6 bg-[#e0e5ec] dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
+    <main className="p-6 bg-[#f0f5ff] dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
       <h1 className="text-3xl font-bold mb-8 text-center">🧾 Checkout</h1>
 
       <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">

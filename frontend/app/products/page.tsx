@@ -45,7 +45,7 @@ export default function ProductsPage() {
   }, []);
 
   return (
-    <main className="p-6 bg-blue-100 dark:bg-[#0a0a0a] text-gray-900 dark:text-white min-h-screen ">
+    <main className="p-6 bg-[#f0f5ff] dark:bg-[#0a0a0a] text-gray-900 dark:text-white min-h-screen ">
       <h1 className="text-3xl font-extrabold  mb-8 text-center">
         🛍️ Explore Our Products
       </h1>
@@ -53,14 +53,14 @@ export default function ProductsPage() {
       {products.length === 0 ? (
         <p className=" text-center">No products available.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <div
               key={product.id}
-              className=" rounded-2xl p-3 flex flex-col items-center bg-white dark:bg-gray-900  shadow-amber-500  transition hover:shadow-[2px_2px_4px_#c5c9d1,-2px_-2px_4px_#ffffff] hover:scale-[1.02]"
+              className=" rounded-2xl py-3 px-2 sm:px-5 md:px-4 lg:px-3 flex flex-col items-center bg-white dark:bg-gray-900  shadow-amber-500  transition hover:shadow-[2px_2px_4px_#c5c9d1,-2px_-2px_4px_#ffffff] hover:scale-[1.02]"
             >
               <Link href={`/products/${product.id}`} className="w-full">
-                <div className="relative w-full">
+                <div className="relative w-full h-[200px]">
                   <Image
                     src={
                       typeof product.image === "string"
@@ -68,9 +68,8 @@ export default function ProductsPage() {
                         : product.image[0] || "/placeholder.png"
                     }
                     alt={product.name}
-                    width={150}
-                    height={150}
-                    className="object-contain mb-3 mx-auto rounded-xl"
+                    fill
+                    className="object-cover mb-3 mx-auto rounded-xl"
                   />
                   {isWishlisted(product.id) && (
                     <span className="absolute top-2 right-2 text-sm bg-red-500 text-white px-2 py-1 rounded-md shadow-md">

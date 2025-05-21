@@ -35,7 +35,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#e0e5ec] dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-[#f0f5ff] dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-xl shadow-neumorphic dark:shadow-md space-y-5">
         <div className="flex flex-col items-center gap-2">
           <UserCircle className="w-16 h-16 text-gray-400 dark:text-gray-300" />

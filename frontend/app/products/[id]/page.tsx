@@ -115,7 +115,7 @@ export default function ProductDetailPage() {
   // }
 
   return (
-    <main className="p-6 bg-[#e0e5ec] min-h-screen">
+    <main className="p-6 bg-[#f0f5ff] min-h-screen">
       <div className="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow grid md:grid-cols-2 gap-8">
         {/* IMAGE CAROUSEL WITH ZOOM */}
         <div className="w-full">

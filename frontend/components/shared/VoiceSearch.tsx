@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Mic } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Mic, MicOff } from "lucide-react";
 
 interface Props {
   onSearch: (query: string) => void;
+  children?: React.ReactNode;
 }
 
 declare global {
@@ -18,6 +19,7 @@ declare global {
     interimResults: boolean;
     onresult: ((event: SpeechRecognitionEvent) => void) | null;
     onerror: ((event: Event) => void) | null;
+    onend: (() => void) | null;
     start(): void;
     stop(): void;
     abort(): void;
@@ -28,8 +30,9 @@ declare global {
   }
 }
 
-const VoiceSearch = ({ onSearch }: Props) => {
+const VoiceSearch = ({ onSearch, children }: Props) => {
   const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -37,7 +40,10 @@ const VoiceSearch = ({ onSearch }: Props) => {
     const RecognitionClass =
       window.SpeechRecognition ?? window.webkitSpeechRecognition;
 
-    if (!RecognitionClass) return;
+    if (!RecognitionClass) {
+      console.warn("Speech recognition not supported in this browser.");
+      return;
+    }
 
     const recognition = new RecognitionClass();
     recognition.lang = "en-US";
@@ -47,25 +53,48 @@ const VoiceSearch = ({ onSearch }: Props) => {
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
       onSearch(transcript);
+    };
+
+    recognition.onerror = () => {
       setListening(false);
     };
 
-    recognition.onerror = () => setListening(false);
+    recognition.onend = () => {
+      setListening(false);
+    };
 
-    if (listening) recognition.start();
+    recognitionRef.current = recognition;
+  }, [onSearch]);
 
-    return () => recognition.abort();
-  }, [listening, onSearch]);
+  const handleClick = () => {
+    if (!recognitionRef.current) return;
+
+    if (listening) {
+      recognitionRef.current.stop();
+    } else {
+      recognitionRef.current.start();
+    }
+
+    setListening((prev) => !prev);
+  };
 
   return (
-    <button
-      onClick={() => setListening(true)}
-      className="p-2 rounded-full shadow-neumorphic bg-[#e0e5ec]"
-      aria-label="Voice search"
-    >
-      <Mic className="text-gray-600" />
-    </button>
-  );
+  <button
+    onClick={handleClick}
+    className={`p-2 rounded-full transition shadow-neumorphic ${
+      listening ? "bg-blue-500 text-white animate-pulse" : "bg-white dark:bg-gray-900"
+    }`}
+    aria-label="Voice search"
+  >
+    {children ? (
+      children
+    ) : listening ? (
+      <MicOff className="w-5 h-5" />
+    ) : (
+      <Mic className="w-5 h-5 text-white" />
+    )}
+  </button>
+);
 };
 
 export default VoiceSearch;

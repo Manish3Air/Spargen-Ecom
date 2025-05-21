@@ -54,7 +54,7 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <main className="p-6 bg-[#e0e5ec] min-h-screen">
+    <main className="p-6 bg-[#f0f5ff] dark:bg-black min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">📦 Products</h1>
         <button

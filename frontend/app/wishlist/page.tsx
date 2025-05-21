@@ -14,7 +14,7 @@ export default function WishlistPage() {
 
 
   return (
-    <main className="p-4 min-h-screen bg-blue-100 dark:bg-[#0a0a0a] text-gray-900 dark:text-white transition-colors">
+    <main className="p-4 min-h-screen bg-[#f0f5ff] dark:bg-[#0a0a0a] text-gray-900 dark:text-white transition-colors">
 
       <h1 className="text-3xl font-bold mb-10 text-center text-gray-800 dark:text-gray-100">
         💖 Your Wishlist
@@ -25,12 +25,14 @@ export default function WishlistPage() {
           Your wishlist is empty.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full mx-auto">
           {wishlist.map(({ id, name, price, image }) => (
             <div
               key={id}
-              className="relative border bg-white dark:bg-gray-900 border-[#cdd5df] dark:border-[#3a3a3a] rounded-2xl py-2 flex flex-col items-center text-center transition-all shadow-amber-500 hover:shadow-[2px_2px_4px_#c5c9d1,-2px_-2px_4px_#ffffff] hover:scale-[1.02]"
+              className=" border-2 bg-white dark:bg-gray-900 border-[#cdd5df] dark:border-[#3a3a3a] rounded-2xl py-3 px-2 sm:px-5 md:px-4 lg:px-3 flex flex-col items-center text-center transition-all shadow-amber-500 hover:shadow-[2px_2px_4px_#c5c9d1,-2px_-2px_4px_#ffffff] hover:scale-[1.02]"
             >
+              
+              <div className="relative w-full h-[200px]">
               <Image
                 src={
                   typeof image === "string"
@@ -38,13 +40,14 @@ export default function WishlistPage() {
                     : image[0] || "/placeholder.png"
                 }
                 alt={name}
-                width={150}
-                height={150}
-                className="w-36 h-36 object-contain mb-4 rounded-xl  shadow-inner"
+                fill
+                className="w-36 h-36 object-cover mb-4 rounded-xl  shadow-inner"
               />
+              </div>
               <h2 className="text-lg font-semibold  truncate w-full">
                 {name}
               </h2>
+
               <p className="text-sm  mb-4">
                 ${price.toFixed(2)}
               </p>
@@ -59,7 +62,7 @@ export default function WishlistPage() {
 
                 <button
                 onClick={() => removeFromWishlist(id)}
-                className="text-sm font-semibold py-2 px-4 rounded-xl bg-red-500 text-white hover:bg-red-700 hover:scale-105  transition"
+                className="text-sm font-semibold py-1 px-2 rounded-xl bg-red-500 text-white hover:bg-red-700 hover:scale-105  transition"
               >
                 ❌Remove from Wishlist
               </button>

@@ -15,7 +15,7 @@ export default function CartPage() {
 
   if (cartItems.length === 0) {
     return (
-      <main className="p-6 min-h-screen flex items-center justify-center bg-[#e0e5ec] dark:bg-gray-900">
+      <main className="p-6 min-h-screen flex items-center justify-center bg-[#f0f5ff] dark:bg-gray-900">
         <p className="text-gray-600 dark:text-gray-300 text-lg">
           🛒 Your cart is empty.
         </p>

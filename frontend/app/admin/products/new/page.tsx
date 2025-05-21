@@ -42,7 +42,7 @@ export default function AddProductPage() {
   };
 
   return (
-    <main className="p-6 bg-[#e0e5ec] min-h-screen">
+    <main className="p-6 bg-[#f0f5ff] dark:bg-black min-h-screen">
       <h1 className="text-2xl font-bold mb-4 text-gray-800">➕ Add New Product</h1>
 
       <form

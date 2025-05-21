@@ -33,7 +33,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
               src={typeof product.image === "string" ? product.image : product.image[0] || "/placeholder.png"}
               alt={product.name}
               fill
-              className="object-contain rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-inner"
+              className="object-cover rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-inner"
             />
           </div>
         </Link>

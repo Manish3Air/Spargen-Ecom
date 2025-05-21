@@ -76,7 +76,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <main className="p-6 bg-[#e0e5ec] dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
+    <main className="p-6 bg-[#f0f5ff] dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
       <h1 className="text-3xl font-bold text-center mb-8">📦 Order History</h1>
 
       {orders.length === 0 ? (
