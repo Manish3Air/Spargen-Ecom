@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Eye, EyeOff, Facebook, GanttChart } from "lucide-react";
+import Link from "next/link";
+import { BorderBeam } from "@/components/magicui/border-beam";
+import {toast} from "sonner"
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -13,30 +16,36 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(form.email, form.password);
-    if (success) {
-      alert("✅ Logged in!");
-      router.push("/");
+    const data = await login(form.email, form.password);
+    if (data) {
+      if (data.user.role === "admin") {
+        toast.success("✅ Admin logged in!");
+        router.push("/admin");
+      } else {
+        toast.success("✅ User logged in!");
+        router.push("/");
+      }
     } else {
       setError("❌ Invalid email or password.");
     }
   };
 
   const handleGoogleLogin = () => {
-    alert("🔄 Google login coming soon");
+    toast.message("🔄 Google login coming soon");
   };
 
   const handleFacebookLogin = () => {
-    alert("🔄 Facebook login coming soon");
+    toast.message("🔄 Facebook login coming soon");
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#f0f5ff] dark:bg-[#0a0a0a] px-4 py-12">
+    <main className="relative min-h-screen flex items-center justify-center bg-[#f0f5ff] dark:bg-[#0a0a0a] px-4 py-12">
+      <div className="relative w-full max-w-md rounded-2xl overflow-hidden">
       <form
         onSubmit={handleSubmit}
-        className="bg-[#e0e5ec] dark:bg-gray-900 p-8 rounded-2xl shadow-neumorphic-inner dark:shadow-none w-full max-w-md space-y-6"
+        className=" bg-[#e0e5ec] dark:bg-gray-900 p-8 rounded-2xl shadow-neumorphic-inner dark:shadow-none w-full max-w-md space-y-6"
       >
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white text-center">Welcome Back 👋</h1>
 
@@ -93,11 +102,19 @@ export default function LoginPage() {
         </div>
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">
         Do not have an acoount?
-        <a href="/register" className="ml-2 text-blue-500  hover:underline hover:text-blue-700">
+        <Link href="/register" className="ml-2 text-blue-500  hover:underline hover:text-blue-700">
           Register
-        </a>
+        </Link>
       </p>
       </form>
+
+      <BorderBeam
+        duration={4}
+        size={300}
+        reverse
+        className="from-transparent via-green-500 to-transparent"
+      />
+      </div>
     </main>
   );
 }

@@ -6,7 +6,7 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controllers/productController.js");
-const { protect, isAdmin } = require("../middlewares/authMiddleware.js"); // Coming soon
+const { protect, isAdmin } = require("../middlewares/authMiddleware.js"); 
 
 const router = express.Router();
 

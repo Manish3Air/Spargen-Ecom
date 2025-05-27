@@ -9,6 +9,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "@/components/layout/Footer";
 import { Suspense } from "react";
+import { Toaster } from 'sonner';
+
+
 
 
 const geistSans = Geist({
@@ -41,7 +44,8 @@ export default function RootLayout({
         <CartProvider>
         <Suspense fallback={<div>Loading...</div>}>
           <Navbar />
-          <main>{children}</main>
+          <Toaster position="top-right" richColors closeButton />
+          <main> {children}</main>
           <Footer />
         </Suspense>
         </CartProvider>

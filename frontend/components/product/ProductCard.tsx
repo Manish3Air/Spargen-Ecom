@@ -3,12 +3,14 @@ import React from "react";
 import Link from "next/link";
 import { useWishlist } from "@/context/WishlistContext";
 import Image from "next/image";
+import { RainbowButton } from "@/components/magicui/rainbow-button";
 
 interface Product {
-  id: string;
+  _id: string;
   name: string;
   price: number;
-  image: string | string[];
+  images: string | string[];
+  description?: string;
 }
 
 interface CartItem extends Product {
@@ -17,20 +19,20 @@ interface CartItem extends Product {
 
 interface Props {
   product: Product;
-  onAddToCart: (item: CartItem) => void;
+  onAddToCart: (product: CartItem) => void;
 }
 
 const ProductCard = ({ product, onAddToCart }: Props) => {
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
-  const wishlisted = isWishlisted(product.id);
+  const wishlisted = isWishlisted(product._id);
 
   return (
     <div className="bg-white dark:bg-gray-900 shadow-neumorphic hover:shadow-lg transition-shadow rounded-2xl py-8 w-full flex flex-col items-center text-center">
       <div className="relative w-full px-5">
-        <Link href={`/products/${product.id}`}>
+        <Link href={`/products/${product._id}`}>
           <div className="relative w-full h-[200px] cursor-pointer">
             <Image
-              src={typeof product.image === "string" ? product.image : product.image[0] || "/placeholder.png"}
+              src={product.images[0]}
               alt={product.name}
               fill
               className="object-cover rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-inner"
@@ -45,7 +47,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
         )}
       </div>
 
-      <Link href={`/products/${product.id}`}>
+      <Link href={`/products/${product._id}`}>
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white truncate w-full cursor-pointer">
           {product.name}
         </h3>
@@ -54,26 +56,27 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
       <p className="text-gray-700 dark:text-white mb-3 text-sm">₹{product.price.toFixed(2)}</p>
 
       <div className="flex justify-center items-center gap-2">
-        <button
+        
+        <RainbowButton
           onClick={() =>
             onAddToCart({
-              id: product.id,
+              _id: product._id,
               name: product.name,
               price: product.price,
               quantity: 1,
-              image: product.image,
+              images: product.images[0],
             })
           }
-          className="bg-white dark:bg-black shadow-neumorphic-inner hover:shadow-inner hover:scale-105  dark:text-white transition rounded-lg px-4 py-2 font-medium text-sm text-black hover:bg-yellow-50 dark:hover:bg-gray-800 cursor-pointer"
+          className="shadow-neumorphic-inner hover:shadow-inner hover:scale-105 text-white dark:text-black transition rounded-lg px-4 py-2 font-medium text-sm hover:bg-yellow-50 dark:hover:bg-gray-800 cursor-pointer"
         >
           🛒 Add to Cart
-        </button>
-
+        </RainbowButton>
+          
         <button
           onClick={() =>
             wishlisted
-              ? removeFromWishlist(product.id)
-              : addToWishlist({ ...product })
+              ? removeFromWishlist(product._id)
+              : addToWishlist( product )
           }
           className="bg-white hover:bg-yellow-50 rounded-lg px-4 py-2 text-center hover:scale-105 transition font-medium text-sm text-red-600 cursor-pointer"
         >

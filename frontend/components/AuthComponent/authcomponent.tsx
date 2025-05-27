@@ -38,7 +38,7 @@ export default function AuthMenu() {
         className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
       >
         <User className="w-5 h-5" />
-        {currentUser && <span className="hidden sm:inline">Hi, <AuroraText>{currentUser.name}</AuroraText></span>}
+        {currentUser && <span className=" sm:inline">Hi, <AuroraText>{currentUser.name}</AuroraText></span>}
       </button>
 
       {open && (

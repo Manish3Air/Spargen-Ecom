@@ -34,6 +34,7 @@ const Product = require("../models/Product.js");
 
 // @desc Update a product (admin only)
  const updateProduct = async (req, res) => {
+  console.log("Api hit");
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,

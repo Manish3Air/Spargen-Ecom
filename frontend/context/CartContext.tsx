@@ -7,12 +7,12 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-
+import { toast } from "sonner";
 export interface CartItem {
-  id: string;
+  _id: string;
   name: string;
   price: number;
-  image: string | string[];
+  images: string | string[];
   quantity: number;
   description?: string;
   stock?: boolean;
@@ -60,28 +60,28 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (item: CartItem) => {
     setCartItems((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
+      const existing = prev.find((i) => i._id === item._id);
       if (existing) {
         return prev.map((i) =>
-          i.id === item.id
+          i._id === item._id
             ? { ...i, quantity: i.quantity + item.quantity }
             : i
         );
       }
       return [...prev, item];
     });
-    alert("✅ Item added to cart!");
+    toast.success("✅ Item added to cart!");
   };
 
   const removeFromCart = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    setCartItems((prev) => prev.filter((item) => item._id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return;
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity } : item
+        item._id === id ? { ...item, quantity } : item
       )
     );
   };

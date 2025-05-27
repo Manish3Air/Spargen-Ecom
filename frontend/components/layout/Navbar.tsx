@@ -1,26 +1,16 @@
 "use client";
 import Link from "next/link";
-// import VoiceSearch from "../shared/VoiceSearch";
-// import { useRouter } from "next/navigation";
-// import { AuroraBackground } from "magic-ui";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { VideoText } from "@/components/magicui/video-text";
+import ClientVideoText from "@/components/ClientVideoText";
 import AuthComponent from "../AuthComponent/authcomponent";
 import SearchBar from "../layout/SearchBar";
 
 
-const Navbar = () => {
-  // const router = useRouter();
-  // const { currentUser, logout } = useAuth();
 
+const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-
-  // const handleVoiceSearch = (query: string) => {
-  //   router.push(`/products?search=${encodeURIComponent(query)}`);
-  //   setMenuOpen(false);
-  // };
 
   const toggleTheme = () => {
     const root = document.documentElement;
@@ -61,17 +51,17 @@ const Navbar = () => {
   );
 
   return (
-    <nav className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/60 dark:bg-gray-900/40 text-gray-800 dark:text-white shadow-md sm:shadow-lg">
+    <nav className="sticky border-2 top-0 z-50 w-full backdrop-blur-md bg-white/60 dark:bg-gray-900/40 text-gray-800 dark:text-white shadow-md sm:shadow-lg">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap md:flex-nowrap items-center justify-between gap-4">
     {/* Logo */}
     <Link href={"/"} className="shrink-0">
       <div className="relative h-[50px] w-[150px] sm:w-[180px] overflow-hidden">
-        <VideoText
+        <ClientVideoText
           src="https://cdn.magicui.design/ocean-small.webm"
           className="font-bold text-xl sm:text-2xl"
         >
           SPARGEN
-        </VideoText>
+        </ClientVideoText>
       </div>
     </Link>
 
@@ -83,7 +73,7 @@ const Navbar = () => {
     
 
     {/* Desktop Nav */}
-    <div className="hidden md:flex items-center gap-5 text-sm font-medium shrink-0">
+    <div className="hidden lg:flex items-center gap-5 text-sm font-medium shrink-0">
       <NavLinks />
       <AuthComponent />
       <button onClick={toggleTheme}>
@@ -92,7 +82,7 @@ const Navbar = () => {
     </div>
 
     {/* Mobile Buttons */}
-    <div className="flex md:hidden items-center gap-2 shrink-0">
+    <div className="flex lg:hidden items-center gap-2 shrink-0">
       <button onClick={toggleTheme}>
         {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </button>
@@ -104,7 +94,7 @@ const Navbar = () => {
 
   {/* Mobile Nav Dropdown */}
   {menuOpen && (
-    <div className="flex flex-col gap-4 mt-2 px-4 pb-4 md:hidden text-sm font-medium">
+    <div className="flex flex-col gap-4 mt-2 px-4 pb-4 lg:hidden text-sm font-medium">
       <NavLinks />
       <AuthComponent />
     </div>

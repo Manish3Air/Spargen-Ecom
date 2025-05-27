@@ -1,9 +1,18 @@
 "use client";
 
-import { useAuth, User } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserCircle, PackageCheck } from "lucide-react";
+import { BorderBeam } from "@/components/magicui/border-beam";
+import {toast} from "sonner";
+
+interface User {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
 
 export default function ProfilePage() {
   const { currentUser, logout } = useAuth();
@@ -20,7 +29,7 @@ export default function ProfilePage() {
 
   const handleSave = () => {
     if (!form.name.trim() || !form.email.trim())
-      return alert("⚠️ All fields are required");
+      return toast.warning("⚠️ All fields are required");
 
     const users = JSON.parse(localStorage.getItem("users") || "[]");
     const updatedUsers = users.map((u: User) =>
@@ -29,15 +38,17 @@ export default function ProfilePage() {
 
     localStorage.setItem("users", JSON.stringify(updatedUsers));
     localStorage.setItem("authUser", JSON.stringify(form));
-    alert("✅ Profile updated. Please log in again.");
+    toast.success("✅ Profile updated. Please log in again.");
     logout();
     router.push("/login");
   };
 
   return (
     <main className="min-h-screen bg-[#f0f5ff] dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-xl shadow-neumorphic dark:shadow-md space-y-5">
-        <div className="flex flex-col items-center gap-2">
+        
+      <div className="relative border-1  w-full max-w-md bg-white dark:bg-[#171717] px-6 py-4 rounded-xl shadow-neumorphic dark:shadow-md space-y-5">
+        
+        <div className=" flex flex-col items-center gap-2">
           <UserCircle className="w-16 h-16 text-gray-400 dark:text-gray-300" />
           <h1 className="text-2xl font-bold">My Profile</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -45,7 +56,7 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className=" space-y-3">
           <input
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -60,7 +71,7 @@ export default function ProfilePage() {
           />
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+        <div className=" flex flex-col sm:flex-row gap-3 pt-2">
           <button
             onClick={() => router.push("/orders")}
             className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium transition"
@@ -76,6 +87,9 @@ export default function ProfilePage() {
             Save & Logout
           </button>
         </div>
+
+        <BorderBeam duration={8} size={100} />
+
       </div>
     </main>
   );

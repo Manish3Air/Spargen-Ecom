@@ -9,10 +9,10 @@ import React, {
 } from "react";
 
 export interface WishlistItem {
-  id: string;
+  _id: string;
   name: string;
   price: number;
-  image: string | string[];
+  images: string | string[];
   description?: string;
   stock?: boolean;
   rating?: number;
@@ -61,17 +61,17 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
   const addToWishlist = (item: WishlistItem) => {
     setWishlist((prev) => {
-      if (prev.some((i) => i.id === item.id)) return prev;
+      if (prev.some((i) => i._id === item._id)) return prev;
       return [...prev, item];
     });
   };
 
   const removeFromWishlist = (id: string) => {
-    setWishlist((prev) => prev.filter((item) => item.id !== id));
+    setWishlist((prev) => prev.filter((item) => item._id !== id));
   };
 
   const isWishlisted = (id: string) =>
-    wishlist.some((item) => item.id === id);
+    wishlist.some((item) => item._id === id);
 
   return (
     <WishlistContext.Provider

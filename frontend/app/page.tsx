@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect } from "react";
+
+import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/product/ProductCard";
 import { useCart } from "@/context/CartContext";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
@@ -14,6 +15,11 @@ import "swiper/css/navigation";
 import Image from "next/image";
 import { Marquee } from "@/components/magicui/marquee";
 import { cn } from "@/lib/utils";
+import BASE_URL from "../utils/api";
+import { WordRotate } from "@/components/magicui/word-rotate";
+import { Ripple } from "@/components/magicui/ripple";
+
+import { DotPattern } from "@/components/magicui/dot-pattern";
 
 const reviews = [
   {
@@ -54,65 +60,6 @@ const reviews = [
   },
 ];
 
-const sampleProducts = [
-  {
-    id: "1",
-    name: "iPhone 15 Pro",
-    price: 999,
-    description: "Latest iPhone with A17 chip",
-    stock: true,
-    rating: 4.5,
-    image: [
-      "/Images/img1.png",
-      "/Images/img2.png",
-      "/Images/img3.png",
-      "/Images/img3.png",
-    ],
-  },
-  {
-    id: "2",
-    name: "Samsung Galaxy S24",
-    price: 899,
-    description: "Latest Samsung with Snapdragon 8 Gen 3",
-    stock: false,
-    rating: 4.7,
-    image: [
-      "/Images/img2.png",
-      "/Images/img1.png",
-      "/Images/img3.png",
-      "/Images/img3.png",
-    ],
-  },
-  {
-    id: "3",
-    name: "iPad Air",
-    price: 599,
-    description: "Latest iPad with M2 chip",
-    stock: true,
-    rating: 4.6,
-    image: [
-      "/Images/img3.png",
-      "/Images/img2.png",
-      "/Images/img1.png",
-      "/Images/img3.png",
-    ],
-  },
-  {
-    id: "4",
-    name: "OnePlus 12",
-    price: 749,
-    description: "Latest OnePlus with Snapdragon 8 Gen 3",
-    stock: true,
-    rating: 4.4,
-    image: [
-      "/Images/img1.png",
-      "/Images/img2.png",
-      "/Images/img3.png",
-      "/Images/img3.png",
-    ],
-  },
-];
-
 const bannerImages = {
   banner1: "/Images/banner7.jpg",
   banner2: "/Images/banner2.jpg",
@@ -122,8 +69,17 @@ const bannerImages = {
   banner6: "/Images/banner6.webp",
 };
 
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  images: string;
+  description?: string;
+}
+
 export default function Home() {
   const { addToCart } = useCart();
+  const [products, setProducts] = useState<Product[]>([]);
   const firstRow = reviews.slice(0, reviews.length / 2);
   const secondRow = reviews.slice(reviews.length / 2);
 
@@ -169,10 +125,19 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const stored = localStorage.getItem("products");
-    if (stored) {
-      localStorage.setItem("products", JSON.stringify(sampleProducts));
-    }
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/products`); // ✅ change to your actual endpoint
+        if (!response.ok) throw new Error("Failed to fetch products");
+        const data = await response.json();
+        setProducts(data.products || data); // depending on your API response shape
+      } catch (error) {
+        console.error("Error loading products:", error);
+        setProducts([]);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   // Replace with your banner image URL
@@ -182,14 +147,20 @@ export default function Home() {
 
   return (
     <main className="py-2 px-4 min-h-screen bg-[#f0f5ff] dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
-      <header className="text-center mb-4">
+      
+      <div className="text-center mb-4">
         <h1 className="text-5xl font-bold mb-2">
-          Welcome to Mobile <AnimatedGradientText> Plaza</AnimatedGradientText>
+          Welcome to Mobile <AnimatedGradientText>Plaza</AnimatedGradientText>
         </h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300">
-          Your one-stop shop for the latest smartphones and tablets
-        </p>
-      </header>
+        <div className="text-lg text-gray-700 dark:text-gray-300 flex justify-center items-center gap-2">
+          <span>Your one-stop shop for the latest </span>
+          <WordRotate
+            className="text-pink-400"
+            words={["Mobiles", "Tablets"]}
+          />
+        </div>
+      </div>
+      
 
       {/* IMAGE CAROUSEL WITH ZOOM */}
       <div className="w-full rounded-xl shadow-lg">
@@ -201,16 +172,16 @@ export default function Home() {
           autoplay={{ delay: 3000 }}
           pagination={{ clickable: true }}
           navigation={true}
-          className="rounded-xl  shadow-inner"
+          className="rounded-xl shadow-inner"
         >
           {imageList.map((img, idx) => (
             <SwiperSlide key={idx}>
-              <div className="relative w-full h-[500px] bg-white dark:bg-gray-900 overflow-hidden rounded-xl">
+              <div className="relative w-full h-[520px] bg-white dark:bg-gray-900 overflow-hidden rounded-xl">
                 <Image
                   src={img}
                   alt={`Banner ${idx + 1}`}
                   fill
-                  className="object-cover transition-transform duration-300 ease-in-out hover:scale-110"
+                  className="object-contain transition-transform duration-300 ease-in-out hover:scale-110"
                   draggable={false}
                 />
               </div>
@@ -220,7 +191,8 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative rounded-xl mt-10 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500   py-20 text-center">
+      <section className="relative h-[300px] w-full overflow-hidden rounded-xl mt-10 bg-gray-900 py-20 text-center">
+        <Ripple />
         <h1 className="text-5xl font-bold mb-4 text-white">
           Discover the Latest in Mobile & Tablet Technology
         </h1>
@@ -234,41 +206,54 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center px-6 py-12">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-md">
-          <Phone size={40} className="mx-auto mb-4 text-primary" />
-          <h3 className="text-xl font-semibold mb-2">Latest Devices</h3>
-          <p className="text-muted-foreground">
-            Stay ahead with our curated collection of the most advanced
-            smartphones and tablets.
-          </p>
-        </div>
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-md">
-          <Rocket size={40} className="mx-auto mb-4 text-primary" />
-          <h3 className="text-xl font-semibold mb-2">Fast Shipping</h3>
-          <p className="text-muted-foreground">
-            We ensure quick and safe delivery to your doorstep, wherever you
-            are.
-          </p>
-        </div>
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-md">
-          <TabletSmartphone size={40} className="mx-auto mb-4 text-primary" />
-          <h3 className="text-xl font-semibold mb-2">Expert Support</h3>
-          <p className="text-muted-foreground">
-            Need help? Our tech experts are just a click away to assist you
-            anytime.
-          </p>
+      <section className="relative rounded h-[300px] w-full overflow-hidden mt-10">
+        <DotPattern />
+        <div className="absolute grid grid-cols-1 md:grid-cols-3 gap-6 text-center px-6 py-10">
+          {[
+            {
+              icon: <Phone size={40} className="mx-auto mb-4 text-primary" />,
+              title: "Latest Devices",
+              description:
+                "Stay ahead with our curated collection of the most advanced smartphones and tablets.",
+            },
+            {
+              icon: <Rocket size={40} className="mx-auto mb-4 text-primary" />,
+              title: "Fast Shipping",
+              description:
+                "We ensure quick and safe delivery to your doorstep, wherever you are.",
+            },
+            {
+              icon: (
+                <TabletSmartphone
+                  size={40}
+                  className="mx-auto mb-4 text-primary"
+                />
+              ),
+              title: "Expert Support",
+              description:
+                "Need help? Our tech experts are just a click away to assist you anytime.",
+            },
+          ].map((feature, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-md"
+            >
+              {feature.icon}
+              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <p className="text-muted-foreground">{feature.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       <section className="my-10">
         <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {sampleProducts.map((product) => (
+          {products.map((product: Product) => (
             <ProductCard
-              key={product.id}
+              key={product._id}
               product={product}
-              onAddToCart={(item) => addToCart(item)}
+              onAddToCart={(product) => addToCart({ ...product, quantity: 1 })}
             />
           ))}
         </div>
@@ -304,24 +289,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* <section className="my-16 bg-gray-100 dark:bg-gray-800 p-10 rounded-lg">
-        <h2 className="text-3xl font-bold text-center mb-10">What Our Customers Say</h2>
-        <Marquee>
-        <div className="grid md:grid-cols-3 gap-6">
-          
-          {["Amit Sharma", "Priya Patel", "Rahul Mehta"].map((name, i) => (
-            
-            <div key={i} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow text-center">
-              <p className="italic text-gray-700 dark:text-gray-300">“Amazing experience shopping here!”</p>
-              <h4 className="mt-4 font-semibold">{name}</h4>
-            </div>
-            
-          ))}
-          
-        </div>
-        </Marquee>
-      </section> */}
-      {/* Customer Reviews Section */}
       <section className="my-16 bg-[#f0f5ff] dark:bg-gray-900 p-10 rounded-lg">
         <h2 className="text-3xl font-bold text-center mb-10">
           What Our Customers Say
@@ -348,7 +315,7 @@ export default function Home() {
           {["apple", "samsung", "oneplus", "xiaomi"].map((brand, i) => (
             <div
               key={i}
-              className="h-8 w-24 text-center bg-gray-300 dark:bg-gray-700 rounded"
+              className="h-8 w-24 text-center bg-gray-300 dark:bg-gray-700 rounded flex items-center justify-center"
             >
               {brand}
             </div>
@@ -379,7 +346,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="px-6 py-20 text-center bg-white dark:bg-gray-900 rounded-lg shadow-lg">
         <h2 className="text-4xl font-bold mb-4">Join the Mobile Revolution</h2>
         <p className="text-lg text-muted-foreground mb-6">

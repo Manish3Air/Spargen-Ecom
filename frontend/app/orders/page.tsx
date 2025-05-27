@@ -3,61 +3,87 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/context/CartContext";
-
+import BASE_URL from "../../utils/api";
+import Image from "next/image";
+import {toast} from "sonner";
 interface Order {
-  id: string;
-  date: string;
+  _id: string;
+  createdAt: string;
   items: {
-    id: string;
+    _id: string;
     name: string;
     price: number;
-    originalPrice?: number;
     quantity: number;
     image: string;
-    status?: "Placed" | "Shipped" | "Out for Delivery" | "Delivered";
   }[];
   total: number;
-  shipping: {
+  actualTotal: number;
+  shippingInfo: {
     name: string;
     email: string;
     address: string;
     city: string;
     zip: string;
   };
+  orderstatus?: "Placed" | "Shipped" | "Out for Delivery" | "Delivered";
+  paymentstatus?: string;
+  paidAt?: string;
 }
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const { currentUser } = useAuth();
-  const { cartItems } = useCart();
   const router = useRouter();
 
-  const actualTotal = cartItems.reduce((total, item) => {
-    const discountPercent = 20; // or item.discount if dynamic
-    const discountedPrice = item.price - item.price * (discountPercent / 100);
-    return total + discountedPrice * item.quantity;
-  }, 0);
+  // const actualTotal = cartItems.reduce((total, item) => {
+  //   const discountPercent = 20; // or item.discount if dynamic
+  //   const discountedPrice = item.price - item.price * (discountPercent / 100);
+  //   return total + discountedPrice * item.quantity;
+  // }, 0);
 
   useEffect(() => {
-    if (!currentUser) {
-      alert("You must be logged in to access this page.");
-      router.push("/login");
-      return;
-    }
+    const fetchUserOrders = async () => {
+      if (!currentUser) {
+        toast.warning("You must be logged in to access this page.");
+        router.push("/login");
+        return;
+      }
 
-    const stored = localStorage.getItem(`orders-${currentUser.email}`);
-    if (stored) {
-      const loaded: Order[] = JSON.parse(stored);
-      const updated = loaded.map((order) => ({
-        ...order,
-        items: order.items.map((item) => ({
-          ...item,
-          status: item.status || "Placed", // default status
-        })),
-      }));
-      setOrders(updated);
-    }
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        toast.error("Auth token missing. Please log in again.");
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/orders/my-orders`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+
+        const data: Order[] = await res.json();
+
+        const updated = data.map((order) => ({
+          ...order,
+          items: order.items.map((item) => ({
+            ...item,
+          })),
+        }));
+
+        setOrders(updated);
+      } catch (err) {
+        console.error("Error fetching user orders:", err);
+        toast.warning("Failed to load order history. Please try again.");
+      }
+    };
+
+    fetchUserOrders();
   }, [currentUser, router]);
 
   const getStatusColor = (status: string) => {
@@ -80,38 +106,71 @@ export default function OrdersPage() {
       <h1 className="text-3xl font-bold text-center mb-8">📦 Order History</h1>
 
       {orders.length === 0 ? (
-        <p className="text-center text-gray-600 dark:text-gray-400">No past orders found.</p>
+        <p className="text-center text-gray-600 dark:text-gray-400">
+          No past orders found.
+        </p>
       ) : (
         <div className="space-y-8 max-w-5xl mx-auto">
-          {orders.map((order) => {
-            const discount = actualTotal - order.total;
+          {orders.map((order: Order) => {
+            const dateOnly = new Date(order.createdAt).toLocaleDateString(
+              "en-US",
+              {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }
+            );
 
             return (
               <div
-                key={order.id}
+                key={order._id}
                 className="bg-white dark:bg-gray-800 rounded-xl shadow-neumorphic dark:shadow-md p-6"
               >
                 <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                  <strong>Order ID:</strong> #{order.id} <br />
-                  <strong>Date:</strong> {order.date}
+                  <strong>Order ID:</strong> #{order._id} <br />
+                  <strong>Date:</strong> {dateOnly}
                 </div>
 
                 <div className="divide-y divide-gray-300 dark:divide-gray-600">
                   {order.items.map((item) => (
-                    <div key={item.id} className="py-3 flex justify-between items-start gap-4">
+                    <div
+                      key={item._id}
+                      className="py-3 flex justify-between items-start gap-4"
+                    >
                       <div>
-                        <p className="font-medium">{item.name} × {item.quantity}</p>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          MRP: ₹{item.originalPrice?.toFixed(2) || item.price.toFixed(2)}<br />
-                          Discounted: ₹{item.price.toFixed(2)} × {item.quantity}
+                        <strong>Product ID:</strong> {item._id} <br />
+                        <div className="flex justify-start items-center gap-4  w-xl ">
+                          <p className="font-mono  px-1 text-pink-500 text-lg">
+                            {item.name}{" "}
+                          </p>
+                          <p>
+                            Quantity:-{" "}
+                            <span className=" rounded border-2 px-4 py-1 text-sm dark:bg-white dark: text-black">
+                              {item.quantity}
+                            </span>
+                          </p>
+                          <Image
+                            src={item.image}
+                            alt="Image"
+                            height={64}
+                            width={64}
+                            className="object-contain border-2 rounded-md inset-shadow-background"
+                          />
+                        </div>
+                        <div className=" text-gray-500 dark:text-gray-300 mt-2 text-md">
+                          Price: ₹{item.price.toFixed(2)} × {item.quantity}
                         </div>
                       </div>
 
                       <div className="text-right space-y-1">
-                        <div className={`inline-block px-2 py-1 rounded text-xs font-semibold ${getStatusColor(item.status || "Placed")}`}>
-                          {item.status}
+                        <div
+                          className={`inline-block px-2 py-1 rounded text-xs font-semibold ${getStatusColor(
+                            order.orderstatus || "Placed"
+                          )}`}
+                        >
+                          {order.orderstatus || "Placed"}
                         </div>
-                        <div className="font-semibold text-gray-700 dark:text-gray-200">
+                        <div className=" mt-4 font-semibold text-gray-700 dark:text-gray-200">
                           ₹{(item.price * item.quantity).toFixed(2)}
                         </div>
                       </div>
@@ -120,10 +179,51 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Pricing Summary */}
-                <div className="mt-4 space-y-1 text-sm text-right text-gray-700 dark:text-gray-200">
-                  <div>Actual Price: ₹{actualTotal.toFixed(2)}</div>
-                  <div className="text-green-600">Discount: - ₹{discount.toFixed(2)}</div>
-                  <div className="font-bold text-lg">Total Paid: ₹{order.total.toFixed(2)}</div>
+                <div className="mt-1 px-4 py-1 space-y-1 text-sm text-right  text-gray-700 dark:text-gray-200">
+                  <div className="text-md">
+                    Actual Price: ₹{order.total.toFixed(2)}
+                  </div>
+                  <div className="text-green-600 text-md animate-bounce">
+                    Discount: - ₹{(order.total - order.actualTotal).toFixed(2)}
+                  </div>
+                  <div className="font-bold text-lg">
+                    Total Paid: ₹{order.actualTotal.toFixed(2)}
+                  </div>
+                  <div className="mt-2 text-sm">
+                    <p>
+                      <strong className="text-gray-400">Payment Status: </strong>{" "}
+                      <span
+                        className={"font-semibold text-green-600 dark:text-green-400"}
+                      >
+                        {order.paymentstatus || "Pending"}
+                      </span>
+                    </p>
+
+                    {order.paidAt && (
+                      <p className="text-gray-500 mt-1">
+                        <strong>Paid on:</strong>{" "}
+                        {new Date(order.paidAt).toLocaleString(undefined, {
+                          weekday: "short",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Shipping Info */}
+                <div className="mt-6 text-sm text-gray-700 dark:text-gray-300">
+                  <h3 className="font-semibold mb-1">Shipping Info:</h3>
+                  <p>Name: {order.shippingInfo.name}</p>
+                  <p> Email: {order.shippingInfo.email}</p>
+                  <p>
+                    Address: {order.shippingInfo.address},{" "}
+                    {order.shippingInfo.city}, {order.shippingInfo.zip}
+                  </p>
                 </div>
               </div>
             );
