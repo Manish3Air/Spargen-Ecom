@@ -75,16 +75,19 @@ cd spargen-ecom
 ### 2️⃣ Environment Variables
 
 #### Frontend Environment variables
+```
 - NEXT_PUBLIC_API_URL=http://localhost:5000
 - NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
+```
 
 #### Backend Environment variables
+```
 - PORT=5000
 - MONGO_URI=your_mongodb_uri
 - JWT_SECRET=your_jwt_secret
 - GOOGLE_CLIENT_ID=your_google_client_id
 - GOOGLE_CLIENT_SECRET=your_google_client_secret
-  
+  ```
 ### 3️⃣ Install Dependencies
 - Backend
 ```bash
@@ -109,9 +112,18 @@ npm run dev
 - 🧠 AI-based product recommendation system
 ## 🤝 Contributing
 - Fork the repository
-- Create your branch (git checkout -b feature/my-feature)
-- Commit your changes (git commit -m 'Add new feature')
-- Push to the branch (git push origin feature/my-feature)
+- Create your feature branch 
+```
+git checkout -b feature/my-feature
+```
+- Commit your changes
+```
+git commit -m "Add new feature"
+```
+- Push to the branch
+```
+git push origin feature/my-feature
+```
 - Open a Pull Request
 ## 📜 License
 MIT © 2025 [Manish Raj Pandey]
