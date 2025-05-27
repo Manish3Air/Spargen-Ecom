@@ -43,6 +43,7 @@
 ---
 
 ## 🧱 Folder Structure
+``` c-sharp
 spargen-ecom/
 ├── frontend/
 │ ├── components/
@@ -60,7 +61,7 @@ spargen-ecom/
 │ ├── middleware/ # protect, isAdmin
 │ ├── config/ # DB config and dotenv
 │ └── .env # Backend env config
-
+```
 ---
 
 ## 📦 Getting Started
