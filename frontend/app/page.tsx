@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils";
 import BASE_URL from "../utils/api";
 import { WordRotate } from "@/components/magicui/word-rotate";
 import { Ripple } from "@/components/magicui/ripple";
+import ShopByCategory from "@/components/ShopByCategory";
+
 
 import { DotPattern } from "@/components/magicui/dot-pattern";
 
@@ -78,7 +80,7 @@ interface Product {
 }
 
 export default function Home() {
-  const { addToCart } = useCart();
+  const { addToCart, cartItems } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const firstRow = reviews.slice(0, reviews.length / 2);
   const secondRow = reviews.slice(reviews.length / 2);
@@ -147,7 +149,6 @@ export default function Home() {
 
   return (
     <main className="py-2 px-4 min-h-screen bg-[#f0f5ff] dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
-      
       <div className="text-center mb-4">
         <h1 className="text-5xl font-bold mb-2">
           Welcome to Mobile <AnimatedGradientText>Plaza</AnimatedGradientText>
@@ -160,7 +161,6 @@ export default function Home() {
           />
         </div>
       </div>
-      
 
       {/* IMAGE CAROUSEL WITH ZOOM */}
       <div className="w-full rounded-xl shadow-lg">
@@ -181,7 +181,7 @@ export default function Home() {
                   src={img}
                   alt={`Banner ${idx + 1}`}
                   fill
-                  className="object-contain transition-transform duration-300 ease-in-out hover:scale-110"
+                  className="object-cover transition-transform duration-300 ease-in-out hover:scale-110"
                   draggable={false}
                 />
               </div>
@@ -191,24 +191,27 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative h-[300px] w-full overflow-hidden rounded-xl mt-10 bg-gray-900 py-20 text-center">
+      <section className="relative w-full overflow-hidden rounded-xl mt-10 bg-gray-900 text-center py-16 px-4 sm:py-20 sm:px-6 md:px-12 lg:px-20">
         <Ripple />
-        <h1 className="text-5xl font-bold mb-4 text-white">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
           Discover the Latest in Mobile & Tablet Technology
         </h1>
-        <p className="text-lg max-w-2xl mx-auto mb-6 text-white">
+        <p className="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-6 text-white">
           Shop the latest smartphones, tablets, and accessories from top brands
           like Apple, Samsung, OnePlus, and more!
         </p>
         <Link href="/products">
-          <Button className="rounded-xl text-lg">Shop Now</Button>
+          <Button className="rounded-xl text-base sm:text-lg px-6 py-3">
+            Shop Now
+          </Button>
         </Link>
       </section>
 
       {/* Features Section */}
-      <section className="relative rounded h-[300px] w-full overflow-hidden mt-10">
+      <section className="relative w-full overflow-hidden rounded-xl mt-10 h-auto bg-gray-100 dark:bg-gray-950">
         <DotPattern />
-        <div className="absolute grid grid-cols-1 md:grid-cols-3 gap-6 text-center px-6 py-10">
+
+        <div className="relative max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8 py-10 text-center ">
           {[
             {
               icon: <Phone size={40} className="mx-auto mb-4 text-primary" />,
@@ -246,48 +249,51 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="my-10">
-        <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {products.map((product: Product) => (
+      {/* Featured Products */}
+
+      <section className="my-10 px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold">Featured Products</h2>
+          <Link href="/products">
+            <button className="text-sm sm:text-base px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700">
+              View All Products
+            </button>
+          </Link>
+        </div>
+
+        {/* Mobile Horizontal Scroll Slider */}
+        <div className="block md:hidden overflow-x-auto scroll-smooth scrollbar-hide">
+          <div className="flex gap-4 snap-x snap-mandatory">
+            {products.map((product) => (
+              <div
+                key={product._id}
+                className="min-w-[80%] snap-start flex-shrink-0"
+              >
+                <ProductCard
+                  product={product}
+                  onAddToCart={addToCart}
+                  cartItems={cartItems}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Grid Layout for md+ screens */}
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.map((product) => (
             <ProductCard
               key={product._id}
               product={product}
-              onAddToCart={(product) => addToCart({ ...product, quantity: 1 })}
+              onAddToCart={addToCart}
+              cartItems={cartItems}
             />
           ))}
         </div>
       </section>
 
-      <section className="my-16">
-        <h2 className="text-3xl font-bold text-center mb-8">
-          Shop by Category
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { name: "Smartphones", image: "/Images/img1.png" },
-            { name: "Tablets", image: "/Images/img2.png" },
-            { name: "Accessories", image: "/Images/img3.png" },
-            { name: "Smartwatches", image: "/Images/img1.png" },
-          ].map((cat, idx) => (
-            <div
-              key={idx}
-              className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow text-center hover:shadow-white dark:hover:shadow-gray-700 transition-transform"
-            >
-              <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded mb-4 hover:scale-105 transition-transform">
-                <Image
-                  src={cat.image}
-                  alt={cat.name}
-                  width={100}
-                  height={100}
-                  className="object-cover w-full h-full rounded"
-                />
-              </div>
-              <h3 className="text-xl font-semibold">{cat.name}</h3>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ShopByCategory />
 
       <section className="my-16 bg-[#f0f5ff] dark:bg-gray-900 p-10 rounded-lg">
         <h2 className="text-3xl font-bold text-center mb-10">
@@ -312,18 +318,34 @@ export default function Home() {
       <section className="my-16 bg-white dark:bg-gray-900 p-10 rounded-lg">
         <h2 className="text-3xl font-bold text-center mb-6">Top Brands</h2>
         <div className="flex justify-center gap-10 flex-wrap items-center">
-          {["apple", "samsung", "oneplus", "xiaomi"].map((brand, i) => (
+          {[
+            { name: "Apple", image: "/Images/appleicon.png" },
+            { name: "Samsung", image: "/Images/samsunglogo.avif" },
+            { name: "Oneplus", image: "/Images/Onepluslogo.png" },
+            { name: "Xiaomi", image: "/Images/Xiaomilogo.png" },
+          ].map((brand, i) => (
             <div
               key={i}
-              className="h-8 w-24 text-center bg-gray-300 dark:bg-gray-700 rounded flex items-center justify-center"
+              className="w-28 sm:w-32 md:w-36 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-md dark:shadow-lg flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300"
             >
-              {brand}
+              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden border-4 border-blue-300 dark:border-blue-600 mb-2">
+                <Image
+                  src={brand.image}
+                  alt={brand.name}
+                  width={112}
+                  height={112}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <p className="text-sm sm:text-base font-semibold text-gray-700 dark:text-white text-center truncate w-full">
+                {brand.name}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="my-16">
+      <section className="my-10">
         <h2 className="text-3xl font-bold text-center mb-6">
           Frequently Asked Questions
         </h2>
@@ -346,7 +368,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-6 py-20 text-center bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+      <section className="p-6 mb-6 text-center bg-white dark:bg-gray-900 rounded-lg shadow-lg">
         <h2 className="text-4xl font-bold mb-4">Join the Mobile Revolution</h2>
         <p className="text-lg text-muted-foreground mb-6">
           Sign up now and get exclusive deals, early access, and tech news
@@ -356,6 +378,7 @@ export default function Home() {
           <Button className="rounded-xl text-lg">Get Started</Button>
         </Link>
       </section>
+
     </main>
   );
 }

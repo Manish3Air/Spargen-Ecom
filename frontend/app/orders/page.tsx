@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import BASE_URL from "../../utils/api";
 import Image from "next/image";
-import {toast} from "sonner";
+import { toast } from "sonner";
 interface Order {
   _id: string;
   createdAt: string;
@@ -102,15 +102,17 @@ export default function OrdersPage() {
   };
 
   return (
-    <main className="p-6 bg-[#f0f5ff] dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
-      <h1 className="text-3xl font-bold text-center mb-8">📦 Order History</h1>
+    <main className="p-4 sm:p-6 bg-[#f0f5ff] dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">
+        📦 Order History
+      </h1>
 
       {orders.length === 0 ? (
         <p className="text-center text-gray-600 dark:text-gray-400">
           No past orders found.
         </p>
       ) : (
-        <div className="space-y-8 max-w-5xl mx-auto">
+        <div className="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
           {orders.map((order: Order) => {
             const dateOnly = new Date(order.createdAt).toLocaleDateString(
               "en-US",
@@ -124,45 +126,49 @@ export default function OrdersPage() {
             return (
               <div
                 key={order._id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-neumorphic dark:shadow-md p-6"
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6"
               >
-                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                {/* Order Meta Info */}
+                <div className="mb-4 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   <strong>Order ID:</strong> #{order._id} <br />
                   <strong>Date:</strong> {dateOnly}
                 </div>
 
+                {/* Items */}
                 <div className="divide-y divide-gray-300 dark:divide-gray-600">
                   {order.items.map((item) => (
                     <div
                       key={item._id}
-                      className="py-3 flex justify-between items-start gap-4"
+                      className="py-3 flex flex-col sm:flex-row justify-between items-start gap-4"
                     >
-                      <div>
-                        <strong>Product ID:</strong> {item._id} <br />
-                        <div className="flex justify-start items-center gap-4  w-xl ">
-                          <p className="font-mono  px-1 text-pink-500 text-lg">
-                            {item.name}{" "}
-                          </p>
-                          <p>
-                            Quantity:-{" "}
-                            <span className=" rounded border-2 px-4 py-1 text-sm dark:bg-white dark: text-black">
-                              {item.quantity}
-                            </span>
-                          </p>
+                      <div className="w-full sm:w-3/4">
+                        <strong className="text-sm">Product ID:</strong>{" "}
+                        {item._id}
+                        <div className="mt-1 flex flex-wrap items-center gap-2 sm:gap-4">
                           <Image
                             src={item.image}
                             alt="Image"
-                            height={64}
-                            width={64}
-                            className="object-contain border-2 rounded-md inset-shadow-background"
+                            height={54}
+                            width={54}
+                            className="object-contain border-2 rounded-md shadow-sm"
                           />
+                          <p className="font-mono text-pink-500 text-base sm:text-lg">
+                            {item.name}
+                          </p>
+                          <p className="text-sm">
+                            Qty:{" "}
+                            <span className="rounded border px-3 py-1 text-sm bg-white dark:bg-gray-200 text-black">
+                              {item.quantity}
+                            </span>
+                          </p>
                         </div>
-                        <div className=" text-gray-500 dark:text-gray-300 mt-2 text-md">
+                        <p className="text-sm text-gray-500 dark:text-gray-300 mt-2">
                           Price: ₹{item.price.toFixed(2)} × {item.quantity}
-                        </div>
+                        </p>
                       </div>
 
-                      <div className="text-right space-y-1">
+                      {/* Status & Subtotal */}
+                      <div className="text-right space-y-1 w-full sm:w-1/4">
                         <div
                           className={`inline-block px-2 py-1 rounded text-xs font-semibold ${getStatusColor(
                             order.orderstatus || "Placed"
@@ -170,7 +176,7 @@ export default function OrdersPage() {
                         >
                           {order.orderstatus || "Placed"}
                         </div>
-                        <div className=" mt-4 font-semibold text-gray-700 dark:text-gray-200">
+                        <div className="font-semibold text-gray-700 dark:text-gray-200 mt-2">
                           ₹{(item.price * item.quantity).toFixed(2)}
                         </div>
                       </div>
@@ -179,22 +185,20 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Pricing Summary */}
-                <div className="mt-1 px-4 py-1 space-y-1 text-sm text-right  text-gray-700 dark:text-gray-200">
-                  <div className="text-md">
-                    Actual Price: ₹{order.total.toFixed(2)}
-                  </div>
-                  <div className="text-green-600 text-md animate-bounce">
+                <div className="mt-3 sm:mt-4 px-2 text-right text-sm sm:text-base text-gray-700 dark:text-gray-200">
+                  <p>Actual Price: ₹{order.total.toFixed(2)}</p>
+                  <p className="text-green-600 animate-bounce">
                     Discount: - ₹{(order.total - order.actualTotal).toFixed(2)}
-                  </div>
-                  <div className="font-bold text-lg">
+                  </p>
+                  <p className="font-bold text-lg">
                     Total Paid: ₹{order.actualTotal.toFixed(2)}
-                  </div>
+                  </p>
+
+                  {/* Payment Info */}
                   <div className="mt-2 text-sm">
                     <p>
-                      <strong className="text-gray-400">Payment Status: </strong>{" "}
-                      <span
-                        className={"font-semibold text-green-600 dark:text-green-400"}
-                      >
+                      <strong className="text-gray-400">Payment Status:</strong>{" "}
+                      <span className="font-semibold text-green-600 dark:text-green-400">
                         {order.paymentstatus || "Pending"}
                       </span>
                     </p>
@@ -219,7 +223,7 @@ export default function OrdersPage() {
                 <div className="mt-6 text-sm text-gray-700 dark:text-gray-300">
                   <h3 className="font-semibold mb-1">Shipping Info:</h3>
                   <p>Name: {order.shippingInfo.name}</p>
-                  <p> Email: {order.shippingInfo.email}</p>
+                  <p>Email: {order.shippingInfo.email}</p>
                   <p>
                     Address: {order.shippingInfo.address},{" "}
                     {order.shippingInfo.city}, {order.shippingInfo.zip}

@@ -47,7 +47,7 @@ export default function AdminAnalyticsPage() {
             <Card title="Total Users" value={stats.totalUsers} />
             <Card title="Total Products" value={stats.totalProducts} />
             <Card title="Total Orders" value={stats.totalOrders} />
-            <Card title="Total Revenue" value={`₹${stats.totalRevenue.toFixed(2)}`} />
+            <Card title="Total Revenue" value={`₹{stats.totalRevenue.toFixed(2)}`} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

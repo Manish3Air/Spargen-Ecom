@@ -1,6 +1,7 @@
 "use client";
 
 import BASE_URL from "@/utils/api";
+import {CredentialResponse } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import React, {
   createContext,
@@ -9,14 +10,16 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-
+import axios from "axios";
+import { toast } from "sonner";
 
 // --- Types ---
 interface User {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   role: string;
+  avatar?: string;
 }
 
 type LoginResponse = {
@@ -29,6 +32,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<LoginResponse | null>;
   register: (user: User) => Promise<boolean>;
   logout: () => void;
+  handleGoogleLogin: (credentialResponse: CredentialResponse) => Promise<void>; // ✅ added to context
 }
 
 // --- Context ---
@@ -49,7 +53,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // --- Login ---
-  const login = async (email: string, password: string): Promise<LoginResponse | null> => {
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<LoginResponse | null> => {
     try {
       const res = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",
@@ -57,10 +64,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      
 
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("authUser", JSON.stringify(data.user));
@@ -68,14 +73,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return data;
     } catch (err) {
       console.error("Login failed:", err);
+      toast.error("Login failed");
       return null;
     }
   };
 
   // --- Register ---
   const register = async (user: User): Promise<boolean> => {
-    // console.log("Inside register in authcontext");
-
     try {
       const res = await fetch(`${BASE_URL}/api/auth/register`, {
         method: "POST",
@@ -84,21 +88,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       const data = await res.json();
-      console.log("Response from register:", res);
-
-      if (!res.ok) {
-        console.error("Registration error:", data.message);
-        return false;
-      }
+      if (!res.ok) return false;
 
       console.log("Registration successful:", data);
-      localStorage.setItem("authToken", data.token);
-      localStorage.setItem("authUser", JSON.stringify(data.user));
-      setCurrentUser(data.user);
       return true;
     } catch (err) {
       console.error("Register failed:", err);
       return false;
+    }
+  };
+
+  // --- Google Login ---
+  const handleGoogleLogin = async (
+    credentialResponse: CredentialResponse
+  ): Promise<void> => {
+    if (!credentialResponse.credential) return;
+
+    try {
+      const res = await axios.post(`${BASE_URL}/api/auth/google`, {
+        token: credentialResponse.credential,
+      });
+
+      const { user, token } = res.data;
+
+      localStorage.setItem("authUser", JSON.stringify(user));
+      localStorage.setItem("authToken", token);
+      setCurrentUser(user);
+
+      if (user.role === "admin") {
+        toast.success("🎉 Google login successful, Admin logged in!");
+        router.push("/admin");
+      } else {
+        toast.success("🎉 Google login successful");
+        router.push("/");
+      }
+
+      router.push("/");
+    } catch (err) {
+      console.error("Google login failed", err);
+      toast.error("❌ Google login failed");
     }
   };
 
@@ -111,7 +139,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        login,
+        register,
+        logout,
+        handleGoogleLogin, 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

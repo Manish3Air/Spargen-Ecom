@@ -1,15 +1,49 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState,useEffect } from "react";
+import BASE_URL from "@/utils/api";
+import axios from "axios";
 
-const metrics = [
-  { id: 1, title: "Total Products", value: 350, icon: "📦" },
-  { id: 2, title: "Total Orders", value: 1245, icon: "🛒" },
-  { id: 3, title: "Total Revenue", value: "$98,230", icon: "💰" },
-];
+
+
+interface DashboardStats {
+  totalUsers: number;
+  totalProducts: number;
+  totalOrders: number;
+  totalRevenue: number;
+  monthlyRevenue: { month: string; revenue: number }[];
+  orderStatusDistribution: { status: string; count: number }[];
+}
 
 export default function AdminDashboard() {
   const router = useRouter();
+
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+
+  const metrics = [
+  { id: 1, title: "Total Products", value: stats?.totalProducts, icon: "📦" },
+  { id: 2, title: "Total Orders", value: stats?.totalOrders, icon: "🛒" },
+  { id: 3, title: "Total Revenue", value: stats?.totalRevenue, icon: "💰" },
+];
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await axios.get(`${BASE_URL}/api/analytics`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setStats(res.data);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
 
   return (
     <main className="min-h-screen p-8 bg-[#f0f5ff] dark:bg-gray-900 text-gray-800 dark:text-gray-200">
@@ -24,7 +58,7 @@ export default function AdminDashboard() {
           >
             <div className="text-4xl mb-4">{icon}</div>
             <h3 className="text-lg font-semibold">{title}</h3>
-            <p className="text-2xl font-bold mt-2">{value}</p>
+            <p className="text-2xl font-bold mt-2">₹{value}</p>
           </div>
         ))}
       </div>

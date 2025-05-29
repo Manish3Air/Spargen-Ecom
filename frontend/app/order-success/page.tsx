@@ -22,7 +22,7 @@ export default function OrderSuccess() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 px-4 sm:px-6 py-10">
       {/* Confetti animation */}
       <Confetti
         width={windowSize.width}
@@ -35,7 +35,7 @@ export default function OrderSuccess() {
       {/* Animated checkmark */}
       <div className="mb-6">
         <svg
-          className="w-24 h-24 text-green-500 stroke-current mx-auto"
+          className="w-20 h-20 sm:w-24 sm:h-24 text-green-500 stroke-current mx-auto"
           viewBox="0 0 52 52"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -64,26 +64,31 @@ export default function OrderSuccess() {
         </svg>
       </div>
 
-      <h1 className="text-4xl font-extrabold text-green-700 dark:text-green-300 mb-4 drop-shadow-md">
-        🎉 Payment Successful!
-      </h1>
+      {/* Text Section */}
+      <div className="text-center max-w-lg space-y-3 px-4">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-green-700 dark:text-green-300 drop-shadow-md">
+          🎉 Payment Successful!
+        </h1>
 
-      <p className="text-lg text-green-900 dark:text-green-100 max-w-md mb-2">
-        Your order has been placed and paid successfully.
-      </p>
+        <p className="text-base sm:text-lg text-green-900 dark:text-green-100">
+          Your order has been placed and paid successfully.
+        </p>
 
-      <p className="text-sm text-green-700 dark:text-green-200 font-mono select-all">
-        Order ID: <span>{orderId || "N/A"}</span>
-      </p>
+        <p className="text-sm sm:text-base text-green-700 dark:text-green-200 font-mono break-words">
+          Order ID: <span>{orderId || "N/A"}</span>
+        </p>
+      </div>
 
-      <button 
-        className="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-      >
-        <Link href="/orders" className="flex items-center gap-2">
-        View Order
+      {/* Button */}
+      <div className="mt-6">
+        <Link href="/orders">
+          <button className="px-5 py-3 text-sm sm:text-base bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+            View Order
+          </button>
         </Link>
-      </button>
+      </div>
 
+      {/* Keyframe Styles */}
       <style jsx>{`
         @keyframes dashCircle {
           to {

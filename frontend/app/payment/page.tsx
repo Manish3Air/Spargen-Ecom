@@ -23,7 +23,6 @@ export default function PaymentPage() {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
-
             },
           });
 
@@ -47,17 +46,25 @@ export default function PaymentPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4">
-  <h2 className="text-3xl font-bold mb-4 drop-shadow-lg">
-    Hold on, your payment is getting processed
-  </h2>
-  <div className="flex space-x-2 text-4xl font-extrabold">
-    {/* Animated dots */}
-    <span className="animate-pulse">●</span>
-    <span className="animate-pulse animation-delay-200">●</span>
-    <span className="animate-pulse animation-delay-400">●</span>
-  </div>
-</div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4 sm:px-6 py-10 text-center">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 drop-shadow-lg">
+        Hold on, your payment is getting processed
+      </h2>
 
+      <div className="flex space-x-2 text-3xl sm:text-4xl font-extrabold">
+        <span className="animate-pulse">●</span>
+        <span className="animate-pulse delay-200">●</span>
+        <span className="animate-pulse delay-400">●</span>
+      </div>
+
+      <style jsx>{`
+        .delay-200 {
+          animation-delay: 0.2s;
+        }
+        .delay-400 {
+          animation-delay: 0.4s;
+        }
+      `}</style>
+    </div>
   );
 }

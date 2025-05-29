@@ -34,7 +34,6 @@ export default function CartPage() {
         >
           🛍️ Your Cart
         </TextAnimate>
-        
       </div>
 
       <div className="max-w-5xl mx-auto space-y-8">
@@ -89,27 +88,45 @@ export default function CartPage() {
                     >
                       Qty:
                     </label>
-                    <input
-                      id={`qty-${_id}`}
-                      type="number"
-                      min={1}
-                      value={quantity}
-                      onChange={(e) => {
-                        const val = +e.target.value;
-                        if (val >= 1) updateQuantity(_id, val);
-                      }}
-                      className="w-20 px-3 py-1.5 rounded-md shadow-inner bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-sm text-center text-gray-800 dark:text-white"
-                    />
-                  </div>
-                </div>
 
-                <div className="text-right">
-                  <button
-                    onClick={() => removeFromCart(_id)}
-                    className="text-sm font-medium text-red-500 hover:underline"
-                  >
-                    ❌ Remove
-                  </button>
+                    <div className="flex border border-gray-300 dark:border-gray-600 rounded-md shadow-inner overflow-hidden bg-white dark:bg-gray-700">
+                      <button
+                        onClick={() =>
+                          updateQuantity(_id, Math.max(1, quantity - 1))
+                        }
+                        className="px-3 py-1 text-gray-800 dark:text-white text-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        −
+                      </button>
+
+                      <input
+                        id={`qty-${_id}`}
+                        type="number"
+                        min={1}
+                        value={quantity}
+                        onChange={(e) => {
+                          const val = +e.target.value;
+                          if (val >= 1) updateQuantity(_id, val);
+                        }}
+                        className="w-16 text-center p-1 sm:px-2 sm:py-1.5 bg-transparent text-sm text-gray-800 dark:text-white focus:outline-none"
+                      />
+
+                      <button
+                        onClick={() => updateQuantity(_id, quantity + 1)}
+                        className="px-3 py-1 text-gray-800 dark:text-white text-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="text-right">
+                      <button
+                        onClick={() => removeFromCart(_id)}
+                        className="text-xs sm:text-sm font-medium bg-red-500 p-1 sm:p-3 text-white hover:underline rounded "
+                      >
+                        Remove from cart
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
@@ -121,7 +138,7 @@ export default function CartPage() {
             <span className="line-through">₹{totalPrice.toFixed(2)}</span>
           </h2>
 
-          <h4 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h4 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">
             Actual Price: ₹{actualPrice.toFixed(2)}
           </h4>
 

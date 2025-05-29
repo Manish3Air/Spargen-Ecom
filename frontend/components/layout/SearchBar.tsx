@@ -23,8 +23,8 @@ const animatedPlaceholders = [
   "Google pixel 7S",
   "motorola edge 40",
   "motorola edge 40 neo",
+  "apple watch",
   "smart watches",
-  "Tempered Glass",
 ];
 
 export default function SearchBar() {
@@ -64,7 +64,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto flex items-center bg-white dark:bg-gray-900 rounded-full px-4 py-2 border-[#e5e1e1] shadow-md dark:shadow-inner-dark transition-all duration-300 border-2">
+    <div className="relative w-full max-w-2xl mx-auto flex items-center bg-white dark:bg-gray-900 rounded-full px-1 sm:px-4 py-2 border-[#e5e1e1] shadow-md dark:shadow-inner-dark transition-all duration-300 border-2">
       <input
         type="text"
         value={query}
@@ -75,7 +75,7 @@ export default function SearchBar() {
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch(query)}
         className={clsx(
-          "flex-grow  px-3 py-2 bg-transparent text-black dark:text-gray-100 text-sm outline-none",
+          "flex-grow  px-1 sm:px-3 py-2 bg-transparent text-black dark:text-gray-100 text-sm outline-none",
           "placeholder-transparent",
           "relative z-10"
         )}
@@ -97,11 +97,11 @@ export default function SearchBar() {
         </div>
       )}
 
-      <div className="flex items-center space-x-2 relative z-10">
+      <div className="flex items-center  sm:ml-0 space-x-1 sm:space-x-2  relative z-10">
         <button
           type="button"
           onClick={() => handleSearch(query)}
-          className="text-sm px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-medium transition"
+          className="text-sm px-1 sm:px-4 sm:py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-medium transition"
         >
           Search
         </button>

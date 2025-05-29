@@ -1,6 +1,13 @@
-const User  = require("../models/User");
+require("dotenv").config;
+const User = require("../models/User");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const  { OAuth2Client }  = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+
+
+
 
 const generateToken = (_id, role, email) => {
   return jwt.sign({ _id, role, email }, process.env.JWT_SECRET, {
@@ -8,9 +15,9 @@ const generateToken = (_id, role, email) => {
   });
 };
 
- const register = async (req, res) => {
+const register = async (req, res) => {
   const { name, email, password } = req.body;
-  const role = req.body.email === "manishpandey3365@gmail.com" ? "admin" :'user';
+  const role = req.body.email === "manishpandey3365@gmail.com" ? "admin" : 'user';
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -41,7 +48,7 @@ const generateToken = (_id, role, email) => {
 };
 
 
- const login = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -58,8 +65,58 @@ const generateToken = (_id, role, email) => {
   }
 };
 
+const googleLogin = async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+      const role = payload.email === "manishpandey3365@gmail.com" ? "admin" : 'user';
+    const { email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        role,
+        avatar: picture,
+      });
+      await user.save();
+    } else {
+      // Update avatar if changed
+      if (user.avatar !== picture) {
+        user.avatar = picture;
+        await user.save();
+      }
+    }
+
+    const jwtToken = generateToken(user._id,user.role,user.email);
+
+    res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role,
+      },
+      token: jwtToken,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ message: 'Invalid Google token' });
+  }
+}
+
 module.exports = {
   register,
   login,
+  googleLogin,
 };
 

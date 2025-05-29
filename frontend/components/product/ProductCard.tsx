@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useWishlist } from "@/context/WishlistContext";
 import Image from "next/image";
@@ -20,11 +20,30 @@ interface CartItem extends Product {
 interface Props {
   product: Product;
   onAddToCart: (product: CartItem) => void;
+  cartItems?: CartItem[]; // optional for determining if it's already in cart
 }
 
-const ProductCard = ({ product, onAddToCart }: Props) => {
+const ProductCard = ({ product, onAddToCart, cartItems }: Props) => {
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
   const wishlisted = isWishlisted(product._id);
+
+  const isAlreadyInCart = cartItems?.some((item) => item._id === product._id);
+
+  const [added, setAdded] = useState(isAlreadyInCart);
+
+  useEffect(() => {
+    if (isAlreadyInCart) setAdded(true);
+  }, [isAlreadyInCart]);
+
+
+  const handleAddToCart = () => {
+    onAddToCart({
+      ...product,
+      quantity: 1,
+      images: Array.isArray(product.images) ? product.images[0] : product.images,
+    });
+    setAdded(true);
+  };
 
   return (
     <div className="bg-white dark:bg-gray-900 shadow-neumorphic hover:shadow-lg transition-shadow rounded-2xl py-8 w-full flex flex-col items-center text-center">
@@ -32,7 +51,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
         <Link href={`/products/${product._id}`}>
           <div className="relative w-full h-[200px] cursor-pointer">
             <Image
-              src={product.images[0]}
+              src={Array.isArray(product.images) ? product.images[0] : product.images}
               alt={product.name}
               fill
               className="object-cover rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-inner"
@@ -55,30 +74,29 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
 
       <p className="text-gray-700 dark:text-white mb-3 text-sm">₹{product.price.toFixed(2)}</p>
 
-      <div className="flex justify-center items-center gap-2">
-        
-        <RainbowButton
-          onClick={() =>
-            onAddToCart({
-              _id: product._id,
-              name: product.name,
-              price: product.price,
-              quantity: 1,
-              images: product.images[0],
-            })
-          }
-          className="shadow-neumorphic-inner hover:shadow-inner hover:scale-105 text-white dark:text-black transition rounded-lg px-4 py-2 font-medium text-sm hover:bg-yellow-50 dark:hover:bg-gray-800 cursor-pointer"
-        >
-          🛒 Add to Cart
-        </RainbowButton>
-          
+      <div className="flex justify-center items-center gap-2 flex-wrap px-3">
+        {added ? (
+          <Link href="/cart">
+            <RainbowButton className="shadow-neumorphic-inner hover:shadow-inner hover:scale-105 text-white dark:text-black transition rounded-lg px-4 py-2 font-medium text-sm hover:bg-yellow-50 dark:hover:bg-gray-800 cursor-pointer">
+              🛒 Go to Cart
+            </RainbowButton>
+          </Link>
+        ) : (
+          <RainbowButton
+            onClick={handleAddToCart}
+            className="shadow-neumorphic-inner hover:shadow-inner hover:scale-105 text-white dark:text-black transition rounded-lg px-4 py-2 font-medium text-sm hover:bg-yellow-50 dark:hover:bg-gray-800 cursor-pointer"
+          >
+            🛒 Add to Cart
+          </RainbowButton>
+        )}
+
         <button
           onClick={() =>
             wishlisted
               ? removeFromWishlist(product._id)
-              : addToWishlist( product )
+              : addToWishlist(product)
           }
-          className="bg-white hover:bg-yellow-50 rounded-lg px-4 py-2 text-center hover:scale-105 transition font-medium text-sm text-red-600 cursor-pointer"
+          className="bg-white w-[146px] hover:bg-yellow-50 rounded-lg px-4 py-2 text-center hover:scale-105 transition font-medium text-sm text-red-600 cursor-pointer"
         >
           {wishlisted ? "💔 Remove " : "❤️ Add to wishlist"}
         </button>

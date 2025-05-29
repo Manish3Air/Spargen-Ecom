@@ -10,6 +10,10 @@ import "slick-carousel/slick/slick-theme.css";
 import Footer from "@/components/layout/Footer";
 import { Suspense } from "react";
 import { Toaster } from 'sonner';
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+
+
 
 
 
@@ -44,8 +48,10 @@ export default function RootLayout({
         <CartProvider>
         <Suspense fallback={<div>Loading...</div>}>
           <Navbar />
-          <Toaster position="top-right" richColors closeButton />
+          <Toaster position="top-right" richColors closeButton duration={2000} />
+          <GoogleOAuthProvider clientId="62706392850-ash0arg9fmoulodkkorppsv4hi1l6qet.apps.googleusercontent.com">
           <main> {children}</main>
+          </GoogleOAuthProvider>
           <Footer />
         </Suspense>
         </CartProvider>

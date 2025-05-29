@@ -53,7 +53,7 @@ app.use("/api/cloudinary", cloudinaryRoutes);
 
 
 // Root route
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {
   // console.log("Root route accessed");
   res.send("✅ E-commerce API is running");
 });

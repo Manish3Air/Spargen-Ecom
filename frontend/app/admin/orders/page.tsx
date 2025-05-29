@@ -104,8 +104,8 @@ export default function AdminOrdersPage() {
                   <p><strong>Order ID:</strong> #{order._id}</p>
                   <p><strong>Email:</strong> {order.userEmail}</p>
 
-                  <label className="block mt-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Status:
+                  <label className=" flex justify-start items-center gap-2 mt-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <p>Status: </p>
                     <select
                       value={order.orderstatus}
                       onChange={(e) => handleStatusChange(order._id, e.target.value)}
@@ -117,6 +117,7 @@ export default function AdminOrdersPage() {
                       <option value="Out for Delivery">Out for Delivery</option>
                       <option value="Delivered">Delivered</option>
                     </select>
+
                   </label>
                 </div>
                 <div className="text-right">
