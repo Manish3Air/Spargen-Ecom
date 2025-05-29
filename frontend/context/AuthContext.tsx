@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // --- Google Login ---
+  // --- Google auth Login ---
   const handleGoogleLogin = async (
     credentialResponse: CredentialResponse
   ): Promise<void> => {
