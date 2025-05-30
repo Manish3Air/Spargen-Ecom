@@ -88,6 +88,13 @@ cd spargen-ecom
 - JWT_SECRET=your_jwt_secret
 - GOOGLE_CLIENT_ID=your_google_client_id
 - GOOGLE_CLIENT_SECRET=your_google_client_secret
+- FRONTEND_DEV_URL = your_frontend_url
+- FRONTEND_PROD_URL = your_prod_url
+- JWT_SECRET = your_jwt_secret
+- CLOUDINARY_CLOUD_NAME=your_cloud_name
+- CLOUDINARY_API_KEY=your_api_key
+- CLOUDINARY_API_SECRET=your_api_secret
+- MONGODB_DB = your_db_name
   ```
 ### 3️⃣ Install Dependencies
 - Backend
