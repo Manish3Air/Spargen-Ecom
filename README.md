@@ -15,6 +15,7 @@
 - ✍️ Submit Product Reviews
 - 🎤 Voice Search with Web Speech API
 - 🌗 Dark/Light Theme Toggle
+- Cloudinary for storing Images
 
 ### 🧑‍💼 Admin Functionality
 - 📋 View/Add/Edit/Delete Products
@@ -38,7 +39,7 @@
 |----------------|-----------------|--------------|----------------|------------------|
 | Next.js        | Node.js         | MongoDB      | JWT / Google   | Tailwind CSS     |
 | React          | Express.js      | Mongoose     | bcryptjs       | MagicUI Elements |
-| TypeScript     | REST APIs       |              |     |          |
+| TypeScript     | REST APIs       | Cloudinary   |                |
 
 ---
 
