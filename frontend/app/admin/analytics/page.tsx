@@ -47,7 +47,7 @@ export default function AdminAnalyticsPage() {
             <Card title="Total Users" value={stats.totalUsers} />
             <Card title="Total Products" value={stats.totalProducts} />
             <Card title="Total Orders" value={stats.totalOrders} />
-            <Card title="Total Revenue" value={`₹{stats.totalRevenue.toFixed(2)}`} />
+            <Card title="Total Revenue" value={stats.totalRevenue.toFixed(2)} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -98,7 +98,7 @@ function Card({ title, value }: { title: string; value: string | number }) {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 text-center">
       <h2 className="text-lg font-semibold text-gray-700 dark:text-white">{title}</h2>
-      <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{value}</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">₹{value}</p>
     </div>
   );
 }

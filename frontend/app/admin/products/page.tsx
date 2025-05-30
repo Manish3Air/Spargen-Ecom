@@ -123,7 +123,7 @@ export default function AdminProductsPage() {
                 </td>
                 <td className="p-3 font-medium">{product.name}</td>
                 <td className="p-3 text-black dark:text-gray-300">
-                  ${product.price}
+                  ₹{product.price}
                 </td>
                 <td className="p-3 space-x-2">
                   <button
