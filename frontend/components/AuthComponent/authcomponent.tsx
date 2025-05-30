@@ -40,7 +40,7 @@ export default function AuthMenu() {
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
       >
-        {currentUser?.avatar && (
+        {currentUser?.avatar ? (
           <div className="flex justify-center">
             <Image
             src={currentUser.avatar}
@@ -50,8 +50,8 @@ export default function AuthMenu() {
             className="rounded-full shadow-md object-cover border-1 border-black"
             />
           </div>
-        )}
-        <User className="w-5 h-5" />
+        ): (<User className="w-5 h-5" />)}
+        
         {currentUser?.name && (
           <p className="sm:inline">
             Hi, <AuroraText>{currentUser.name.split(" ")[0]}</AuroraText>
