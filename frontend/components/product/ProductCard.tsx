@@ -46,8 +46,8 @@ const ProductCard = ({ product, onAddToCart, cartItems }: Props) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 shadow-neumorphic hover:shadow-lg transition-shadow rounded-2xl py-8 w-full flex flex-col items-center text-center">
-      <div className="relative w-full px-5">
+    <div className="bg-white dark:bg-gray-900 shadow-neumorphic hover:shadow-lg transition-shadow rounded-2xl py-8 w-full flex flex-col items-center text-center shadow-md hover:transition-transform hover:scale-105">
+      <div className="relative w-full px-5 ">
         <Link href={`/products/${product._id}`}>
           <div className="relative w-full h-[200px] cursor-pointer">
             <Image

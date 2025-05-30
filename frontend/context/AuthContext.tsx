@@ -1,7 +1,7 @@
 "use client";
 
 import BASE_URL from "@/utils/api";
-import {CredentialResponse } from "@react-oauth/google";
+import { CredentialResponse } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import React, {
   createContext,
@@ -117,13 +117,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (user.role === "admin") {
         toast.success("🎉 Google login successful, Admin logged in!");
-        router.push("/admin");
+        setTimeout(() => {
+          router.push("/admin");
+        }, 3000);
       } else {
         toast.success("🎉 Google login successful");
         router.push("/");
       }
-
-      router.push("/");
+      // router.push("/");
     } catch (err) {
       console.error("Google login failed", err);
       toast.error("❌ Google login failed");
@@ -145,7 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         register,
         logout,
-        handleGoogleLogin, 
+        handleGoogleLogin,
       }}
     >
       {children}
