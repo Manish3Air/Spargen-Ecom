@@ -19,7 +19,7 @@ import BASE_URL from "../utils/api";
 import { WordRotate } from "@/components/magicui/word-rotate";
 import { Ripple } from "@/components/magicui/ripple";
 import ShopByCategory from "@/components/ShopByCategory";
-
+import { motion, AnimatePresence } from "framer-motion";
 
 import { DotPattern } from "@/components/magicui/dot-pattern";
 
@@ -84,6 +84,11 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const firstRow = reviews.slice(0, reviews.length / 2);
   const secondRow = reviews.slice(reviews.length / 2);
+  const [visibleCount, setVisibleCount] = useState(8);
+
+  const showMore = () => {
+    setVisibleCount((prev) => prev + 4); // show 4 more each time
+  };
 
   const ReviewCard = ({
     img,
@@ -281,16 +286,38 @@ export default function Home() {
         </div>
 
         {/* Grid Layout for md+ screens */}
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              onAddToCart={addToCart}
-              cartItems={cartItems}
-            />
-          ))}
-        </div>
+        <>
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <AnimatePresence>
+              {products.slice(0, visibleCount).map((product) => (
+                <motion.div
+                  key={product._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ProductCard
+                    product={product}
+                    onAddToCart={addToCart}
+                    cartItems={cartItems}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {visibleCount < products.length && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={showMore}
+                className="px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
+              >
+                View More
+              </button>
+            </div>
+          )}
+        </>
       </section>
 
       <ShopByCategory />
@@ -378,7 +405,6 @@ export default function Home() {
           <Button className="rounded-xl text-lg">Get Started</Button>
         </Link>
       </section>
-
     </main>
   );
 }
