@@ -134,10 +134,10 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/products`); // ✅ change to your actual endpoint
+        const response = await fetch(`${BASE_URL}/api/products`);
         if (!response.ok) throw new Error("Failed to fetch products");
         const data = await response.json();
-        setProducts(data.products || data); // depending on your API response shape
+        setProducts(data.products || data);
       } catch (error) {
         console.error("Error loading products:", error);
         setProducts([]);
@@ -307,7 +307,7 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {visibleCount < products.length && (
+          {visibleCount < products.length ? (
             <div className="flex justify-center mt-6">
               <button
                 onClick={showMore}
@@ -316,6 +316,10 @@ export default function Home() {
                 View More
               </button>
             </div>
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
+              🚫 No more products available at the moment.
+            </p>
           )}
         </>
       </section>

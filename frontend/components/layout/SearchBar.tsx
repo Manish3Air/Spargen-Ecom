@@ -60,7 +60,7 @@ export default function SearchBar() {
 
   const handleSearch = (text: string) => {
     const q = text.trim();
-    if (q) router.push(`/search?query=${encodeURIComponent(q)}`);
+    if (q) router.push(`/search?query=${q}`);
   };
 
   return (

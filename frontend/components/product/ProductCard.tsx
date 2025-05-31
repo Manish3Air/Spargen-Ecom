@@ -49,12 +49,13 @@ const ProductCard = ({ product, onAddToCart, cartItems }: Props) => {
     <div className="bg-white dark:bg-gray-900 shadow-neumorphic hover:shadow-lg transition-shadow rounded-2xl py-8 w-full flex flex-col items-center text-center shadow-md hover:transition-transform hover:scale-105">
       <div className="relative w-full px-5 ">
         <Link href={`/products/${product._id}`}>
-          <div className="relative w-full h-[200px] cursor-pointer">
+          <div className="relative w-full h-[250px] cursor-pointer">
             <Image
               src={Array.isArray(product.images) ? product.images[0] : product.images}
               alt={product.name}
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
               fill
-              className="object-cover rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-inner"
+              className="object-contain rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-inner"
             />
           </div>
         </Link>

@@ -41,6 +41,9 @@ app.use(cors({
 
 app.use(express.json()); // Parse incoming JSON
 
+
+
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
@@ -50,6 +53,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/users", userRoutes);
 
 app.use("/api/cloudinary", cloudinaryRoutes);
+
 
 
 // Root route

@@ -33,6 +33,7 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [sortOrder, setSortOrder] = useState("");
+  const [loading,setloading] = useState(false);
 
   const searchParams = useSearchParams();
   const category = searchParams.get('category');
@@ -77,6 +78,7 @@ useEffect(() => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setloading(true);
       try {
         const res = await fetch(`${BASE_URL}/api/products`);
         const data = await res.json();
@@ -84,6 +86,8 @@ useEffect(() => {
         setFilteredProducts(data.products || data);
       } catch (err) {
         console.error("Failed to load products:", err);
+      }finally{
+        setloading(false);
       }
     };
     fetchProducts();
@@ -137,9 +141,11 @@ useEffect(() => {
       <div className="flex flex-col md:flex-row gap-8">
         {/* Product Grid */}
         <section className="flex-1">
-          {filteredProducts.length === 0 ? (
+          { loading ? (<p> Loading ...</p>):
+          filteredProducts.length === 0 ? (
             <p className="text-center">No products match your filters.</p>
           ) : (
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredProducts.map((product) => (
                 <div
@@ -156,7 +162,7 @@ useEffect(() => {
                         }
                         alt={product.name}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                       />
                       {isWishlisted(product._id) && (
                         <span className="absolute top-2 right-2 text-sm bg-red-500 text-white px-2 py-1 rounded-md">
@@ -204,9 +210,11 @@ useEffect(() => {
                       {isWishlisted(product._id) ? "💔 Remove" : "💖 Wishlist"}
                     </button>
                   </div>
+
                 </div>
               ))}
             </div>
+
           )}
         </section>
       </div>

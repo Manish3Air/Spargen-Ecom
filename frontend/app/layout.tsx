@@ -11,6 +11,7 @@ import Footer from "@/components/layout/Footer";
 import { Suspense } from "react";
 import { Toaster } from 'sonner';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import RouteLoaderWrapper from "@/components/RouteLoaderWrapper";
 
 
 
@@ -50,7 +51,8 @@ export default function RootLayout({
           <Navbar />
           <Toaster position="top-right" richColors closeButton duration={2000} />
           <GoogleOAuthProvider clientId="62706392850-ash0arg9fmoulodkkorppsv4hi1l6qet.apps.googleusercontent.com">
-          <main> {children}</main>
+          <RouteLoaderWrapper>
+          <main> {children}</main></RouteLoaderWrapper>
           </GoogleOAuthProvider>
           <Footer />
         </Suspense>
