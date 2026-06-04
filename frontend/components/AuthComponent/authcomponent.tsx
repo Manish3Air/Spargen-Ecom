@@ -11,8 +11,10 @@ import Image from "next/image";
 export default function AuthMenu() {
   const { currentUser, logout, loading } = useAuth();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -34,15 +36,21 @@ export default function AuthMenu() {
     router.prefetch("/register");
   }, [router]);
 
-  if (loading) {
-  return (
-    <div className="relative inline-block text-left">
-      <button className="flex items-center gap-2 px-3 py-2 rounded-md">
-        <User className="w-5 h-5" />
-      </button>
-    </div>
-  );
-}
+  // Set mounted flag to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Show loading state during SSR and initial hydration
+  if (!mounted || loading) {
+    return (
+      <div className="relative inline-block text-left">
+        <button className="flex items-center gap-2 px-3 py-2 rounded-md">
+          <User className="w-5 h-5" />
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div ref={dropdownRef} className="relative inline-block text-left">
@@ -53,15 +61,17 @@ export default function AuthMenu() {
         {currentUser?.avatar ? (
           <div className="flex justify-center">
             <Image
-            src={currentUser.avatar}
-            alt="profile"
-            width={40}
-            height={40}
-            className="rounded-full shadow-md object-cover border-1 border-black"
+              src={currentUser.avatar}
+              alt="profile"
+              width={40}
+              height={40}
+              className="rounded-full shadow-md object-cover border-1 border-black"
             />
           </div>
-        ): (<User className="w-5 h-5" />)}
-        
+        ) : (
+          <User className="w-5 h-5" />
+        )}
+
         {currentUser?.name && (
           <p className="sm:inline">
             Hi, <AuroraText>{currentUser.name.split(" ")[0]}</AuroraText>
@@ -110,7 +120,6 @@ export default function AuthMenu() {
           )}
         </div>
       )}
-
     </div>
   );
 }

@@ -435,17 +435,17 @@ function ProductCardDesktop({
           images={product.images}
           productName={product.name}
         />
-        <div className="absolute inset-0 flex items-center justify-center gap-2 rounded-lg bg-black/0 transition group-hover:bg-black/40">
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 rounded-lg bg-black/0 transition group-hover:bg-black/40">
           <button
             onClick={onEdit}
-            className="rounded-full bg-white p-2 text-blue-600 shadow-lg transition hover:bg-blue-50 active:scale-95"
+            className="pointer-events-auto rounded-full bg-white p-2 text-blue-600 shadow-lg transition hover:bg-blue-50 active:scale-95"
             aria-label={`Edit ${product.name}`}
           >
             <Edit className="h-5 w-5" />
           </button>
           <button
             onClick={onDelete}
-            className="rounded-full bg-white p-2 text-red-600 shadow-lg transition hover:bg-red-50 active:scale-95"
+            className="pointer-events-auto rounded-full bg-white p-2 text-red-600 shadow-lg transition hover:bg-red-50 active:scale-95"
             aria-label={`Delete ${product.name}`}
           >
             <Trash2 className="h-5 w-5" />
