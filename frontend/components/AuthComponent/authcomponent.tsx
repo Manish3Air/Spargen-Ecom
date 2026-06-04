@@ -9,7 +9,7 @@ import { AuroraText } from "../magicui/aurora-text";
 import Image from "next/image";
 
 export default function AuthMenu() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, loading } = useAuth();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -33,6 +33,16 @@ export default function AuthMenu() {
     router.prefetch("/login"); // Optional prefetching
     router.prefetch("/register");
   }, [router]);
+
+  if (loading) {
+  return (
+    <div className="relative inline-block text-left">
+      <button className="flex items-center gap-2 px-3 py-2 rounded-md">
+        <User className="w-5 h-5" />
+      </button>
+    </div>
+  );
+}
 
   return (
     <div ref={dropdownRef} className="relative inline-block text-left">

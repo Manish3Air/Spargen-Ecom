@@ -29,6 +29,7 @@ type LoginResponse = {
 
 interface AuthContextType {
   currentUser: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<LoginResponse | null>;
   register: (user: User) => Promise<boolean>;
   logout: () => void;
@@ -41,6 +42,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // --- Provider ---
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   // Restore user on load
@@ -50,6 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (storedUser && token) {
       setCurrentUser(JSON.parse(storedUser));
     }
+    setLoading(false);
   }, []);
 
   // --- Login ---
@@ -143,6 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         currentUser,
+        loading,
         login,
         register,
         logout,

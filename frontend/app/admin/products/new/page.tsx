@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BASE_URL from "@/utils/api";
+import { uploadProductImages } from "@/utils/cloudinaryUpload";
 import { toast } from "sonner";
 import Image from "next/image";
 
@@ -58,52 +59,31 @@ export default function AddProductPage() {
   // };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const files = e.target.files;
-  if (!files) return;
+    const files = e.target.files;
+    if (!files?.length) return;
 
-  setUploading(true);
-  const uploadedImages: string[] = [];
     const token = localStorage.getItem("authToken");
-  for (let i = 0; i < files.length; i++) {
-    // Fetch signature from backend
-    const sigRes = await fetch(`${BASE_URL}/api/cloudinary/signature`,{
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-
-    if (!sigRes.ok) {
-      console.error("Failed to get signature");
-      continue;
+    if (!token) {
+      toast.error("Please log in again before uploading images.");
+      return;
     }
-    const sigData = await sigRes.json();
 
-    const formData = new FormData();
-    formData.append("file", files[i]);
-    formData.append("upload_preset", sigData.uploadPreset);
-    formData.append("timestamp", sigData.timestamp.toString());
-    formData.append("signature", sigData.signature);
-    formData.append("api_key", sigData.apiKey);
-
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`, {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-    if (data.secure_url) {
-      uploadedImages.push(data.secure_url);
-    } else {
-      console.error("Upload failed", data);
+    setUploading(true);
+    try {
+      const uploadedImages = await uploadProductImages(files, token);
+      setForm((prev) => ({
+        ...prev,
+        images: [...prev.images, ...uploadedImages],
+      }));
+      toast.success("Images uploaded.");
+    } catch (error) {
+      console.error(error);
+      toast.error(error instanceof Error ? error.message : "Image upload failed.");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
     }
-  }
-
-  setForm((prev) => ({ ...prev, images: [...prev.images, ...uploadedImages] }));
-  setUploading(false);
-};
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,52 +117,68 @@ export default function AddProductPage() {
   };
 
   return (
-    <main className="p-6 bg-[#f0f5ff] dark:bg-black min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">➕ Add New Product</h1>
+    <section className="space-y-6">
+      <div>
+        <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+          Inventory
+        </p>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
+          Add new product
+        </h1>
+      </div>
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-900 p-6 rounded shadow space-y-4 max-w-xl"
+        className="grid gap-5 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6 lg:grid-cols-2"
       >
-        <label className="text-lg text-black dark:text-gray-300"> Product Name </label>
+        <label className="space-y-2 text-sm font-medium text-slate-700 dark:text-zinc-300">
+          <span>Product Name</span>
         <input
           type="text"
           name="name"
           placeholder="Product Name"
           value={form.name}
           onChange={handleChange}
-          className="w-full p-2 rounded border"
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:ring-blue-950"
           required
         />
-        <label className="text-lg text-black dark:text-gray-300"> Price </label>
+        </label>
+        <label className="space-y-2 text-sm font-medium text-slate-700 dark:text-zinc-300">
+          <span>Price</span>
         <input
           type="number"
           name="price"
           placeholder="Price"
           value={form.price}
           onChange={handleChange}
-          className="w-full p-2 rounded border"
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:ring-blue-950"
           required
         />
-        <label className="text-lg text-black dark:text-gray-300"> stock availability </label>
+        </label>
+        <label className="space-y-2 text-sm font-medium text-slate-700 dark:text-zinc-300">
+          <span>Stock availability</span>
         <input
           type="number"
           name="stock"
           placeholder="Stock"
           value={form.stock}
           onChange={handleChange}
-          className="w-full p-2 rounded border"
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:ring-blue-950"
         />
-        <label className="text-lg text-black dark:text-gray-300"> Category </label>
+        </label>
+        <label className="space-y-2 text-sm font-medium text-slate-700 dark:text-zinc-300">
+          <span>Category</span>
         <input
           type="text"
           name="category"
           placeholder="Category"
           value={form.category}
           onChange={handleChange}
-          className="w-full p-2 rounded border"
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:ring-blue-950"
         />
-        <label className="text-lg text-black dark:text-gray-300"> Rating </label>
+        </label>
+        <label className="space-y-2 text-sm font-medium text-slate-700 dark:text-zinc-300">
+          <span>Rating</span>
         <input
           type="number"
           step="0.1"
@@ -191,43 +187,54 @@ export default function AddProductPage() {
           placeholder="Ratings (0-5)"
           value={form.ratings}
           onChange={handleChange}
-          className="w-full p-2 rounded border"
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:ring-blue-950"
         />
-        <label className="text-lg text-black dark:text-gray-300"> Product Description </label>
+        </label>
+        <label className="space-y-2 text-sm font-medium text-slate-700 dark:text-zinc-300 lg:col-span-2">
+          <span>Product Description</span>
         <textarea
           name="description"
           placeholder="Product Description (optional)"
           value={form.description}
           onChange={handleChange}
-          className="w-full p-2 rounded border"
+          className="min-h-28 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:focus:ring-blue-950"
         />
-        <label className="text-lg text-black dark:text-gray-300"> Upload multiple images </label>
+        </label>
+        <label className="space-y-2 text-sm font-medium text-slate-700 dark:text-zinc-300 lg:col-span-2">
+          <span>Upload multiple images</span>
         <input
           type="file"
           accept="image/*"
           multiple
           onChange={handleImageUpload}
-          className="w-full p-2 rounded border"
+          className="w-full rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-3 text-sm text-slate-700 file:mr-4 file:rounded-md file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300"
         />
-        {uploading && <p className="text-blue-600">Uploading images...</p>}
-        <div className="flex gap-2 flex-wrap">
+        </label>
+        {uploading && (
+          <p className="text-sm font-medium text-blue-600 dark:text-blue-400 lg:col-span-2">
+            Uploading images...
+          </p>
+        )}
+        <div className="flex flex-wrap gap-2 lg:col-span-2">
           {form.images.map((url, idx) => (
             <Image
               key={idx}
               src={url}
               alt={`Uploaded ${idx}`}
-              className="w-24 h-24 object-cover rounded border"
+              width={96}
+              height={96}
+              className="h-24 w-24 rounded-md border border-slate-200 object-cover dark:border-zinc-700"
             />
           ))}
         </div>
 
         <button
           type="submit"
-          className="bg-[#d1d9e6] hover:bg-gray-300 px-4 py-2 rounded font-medium text-gray-800"
+          className="inline-flex w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 sm:w-auto lg:col-span-2"
         >
           Add Product
         </button>
       </form>
-    </main>
+    </section>
   );
 }
