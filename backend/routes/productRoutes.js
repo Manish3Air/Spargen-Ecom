@@ -7,9 +7,11 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  createProductReview,
+  getProductReviews,
+  updateProductReview,
 } = require("../controllers/productController.js");
 const { protect, isAdmin } = require("../middlewares/authMiddleware.js");
-
 
 router.get("/search", async (req, res) => {
   const { query } = req.query;
@@ -34,13 +36,13 @@ router.get("/:id", getProductById);
 router.post("/", protect, isAdmin, createProduct);
 router.put("/:id", protect, isAdmin, updateProduct);
 router.delete("/:id", protect, isAdmin, deleteProduct);
+router
+  .route("/:id/reviews")
+  .get(getProductReviews)
+  .post(protect, createProductReview);
 
+router.put("/:id/reviews/:reviewId", protect, updateProductReview);
 
 // GET /api/search?query=somekeyword
-
-
-
-
-
 
 module.exports = router;
