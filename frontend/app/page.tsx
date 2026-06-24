@@ -367,36 +367,33 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Mobile Horizontal Scroll Slider */}
-          <div className="block lg:hidden overflow-x-auto scroll-smooth scrollbar-hide mb-6">
-            <div className="flex gap-4 snap-x snap-mandatory">
-              {products.slice(0, 4).map((product) => (
-                <div
-                  key={product._id}
-                  className="min-w-[85%] sm:min-w-[60%] snap-start flex-shrink-0"
-                >
-                  <ProductCard
-                    product={product}
-                    onAddToCart={addToCart}
-                    cartItems={cartItems}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Grid Layout for lg+ screens */}
+          {/* Products Grid / Slider */}
           {loading ? (
-            <div className="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(ITEMS_PER_PAGE)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-gray-200 dark:bg-gray-800 rounded-2xl h-80 animate-pulse"
-                />
-              ))}
-            </div>
+            <>
+              {/* Mobile Skeleton */}
+              <div className="block lg:hidden overflow-x-auto scroll-smooth scrollbar-hide mb-6">
+                <div className="flex gap-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="min-w-[85%] sm:min-w-[60%] flex-shrink-0 bg-gray-200 dark:bg-gray-800 rounded-2xl h-80 animate-pulse"
+                    />
+                  ))}
+                </div>
+              </div>
+              {/* Desktop Skeleton */}
+              <div className="hidden lg:grid grid-cols-4 gap-6">
+                {[...Array(ITEMS_PER_PAGE)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-gray-200 dark:bg-gray-800 rounded-2xl h-80 animate-pulse"
+                  />
+                ))}
+              </div>
+            </>
           ) : paginatedProducts.length > 0 ? (
             <>
+              {/* Mobile Horizontal Scroll Slider */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentPage}
@@ -404,7 +401,34 @@ export default function Home() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+                  className="block lg:hidden overflow-x-auto scroll-smooth scrollbar-hide mb-6"
+                >
+                  <div className="flex gap-4">
+                    {paginatedProducts.map((product) => (
+                      <div
+                        key={product._id}
+                        className="min-w-[85%] sm:min-w-[60%] flex-shrink-0"
+                      >
+                        <ProductCard
+                          product={product}
+                          onAddToCart={addToCart}
+                          cartItems={cartItems}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Grid Layout for lg+ screens */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentPage}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="hidden lg:grid grid-cols-4 gap-6 mb-8"
                 >
                   {paginatedProducts.map((product) => (
                     <ProductCard
