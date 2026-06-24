@@ -6,7 +6,13 @@ import { useCart } from "@/context/CartContext";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { Button } from "@/components/magicui/Button";
 import Link from "next/link";
-import { Phone, TabletSmartphone, Rocket, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Phone,
+  TabletSmartphone,
+  Rocket,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -137,7 +143,7 @@ export default function Home() {
           // light styles
           "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
           // dark styles
-          "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
+          "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
         )}
       >
         <div className="flex flex-row items-center gap-2">
@@ -264,8 +270,8 @@ export default function Home() {
             Discover the Latest in Mobile & Tablet Technology
           </h2>
           <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-4 sm:mb-6 text-blue-50">
-            Shop the latest smartphones, tablets, and accessories from top brands
-            like Apple, Samsung, OnePlus, and more!
+            Shop the latest smartphones, tablets, and accessories from top
+            brands like Apple, Samsung, OnePlus, and more!
           </p>
           <Link href="/products">
             <Button className="rounded-xl text-base sm:text-lg px-6 py-2 sm:py-3 hover:shadow-lg transition-shadow">
@@ -286,13 +292,23 @@ export default function Home() {
         <div className="relative max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 py-10">
           {[
             {
-              icon: <Phone size={40} className="mx-auto mb-4 text-blue-600 dark:text-blue-400" />,
+              icon: (
+                <Phone
+                  size={40}
+                  className="mx-auto mb-4 text-blue-600 dark:text-blue-400"
+                />
+              ),
               title: "Latest Devices",
               description:
                 "Stay ahead with our curated collection of the most advanced smartphones and tablets.",
             },
             {
-              icon: <Rocket size={40} className="mx-auto mb-4 text-blue-600 dark:text-blue-400" />,
+              icon: (
+                <Rocket
+                  size={40}
+                  className="mx-auto mb-4 text-blue-600 dark:text-blue-400"
+                />
+              ),
               title: "Fast Shipping",
               description:
                 "We ensure quick and safe delivery to your doorstep, wherever you are.",
@@ -336,9 +352,12 @@ export default function Home() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
             <div>
-              <h2 className="text-3xl sm:text-4xl font-bold">Featured Products</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold">
+                Featured Products
+              </h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base mt-1">
-                Showing {startIndex + 1} to {Math.min(endIndex, products.length)} of {products.length}
+                Showing {startIndex + 1} to{" "}
+                {Math.min(endIndex, products.length)} of {products.length}
               </p>
             </div>
             <Link href="/products">
@@ -378,25 +397,25 @@ export default function Home() {
             </div>
           ) : paginatedProducts.length > 0 ? (
             <>
-              <div className="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <AnimatePresence>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentPage}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+                >
                   {paginatedProducts.map((product) => (
-                    <motion.div
+                    <ProductCard
                       key={product._id}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ProductCard
-                        product={product}
-                        onAddToCart={addToCart}
-                        cartItems={cartItems}
-                      />
-                    </motion.div>
+                      product={product}
+                      onAddToCart={addToCart}
+                      cartItems={cartItems}
+                    />
                   ))}
-                </AnimatePresence>
-              </div>
+                </motion.div>
+              </AnimatePresence>
 
               {/* Pagination Controls */}
               {totalPages > 1 && (
@@ -411,23 +430,27 @@ export default function Home() {
                   </button>
 
                   <div className="flex gap-2 flex-wrap justify-center">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={`w-10 h-10 rounded-lg font-semibold transition ${
-                          currentPage === page
-                            ? "bg-blue-600 text-white shadow-lg"
-                            : "border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-10 h-10 rounded-lg font-semibold transition ${
+                            currentPage === page
+                              ? "bg-blue-600 text-white shadow-lg"
+                              : "border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ),
+                    )}
                   </div>
 
                   <button
-                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(p + 1, totalPages))
+                    }
                     disabled={currentPage === totalPages}
                     className="p-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
                     aria-label="Next page"
@@ -536,7 +559,10 @@ export default function Home() {
             <motion.div
               key={i}
               initial={false}
-              animate={{ backgroundColor: expandedFAQ === i ? "rgba(59, 130, 246, 0.1)" : "transparent" }}
+              animate={{
+                backgroundColor:
+                  expandedFAQ === i ? "rgba(59, 130, 246, 0.1)" : "transparent",
+              }}
               className="bg-white dark:bg-gray-900 rounded-xl shadow-sm overflow-hidden transition-all"
             >
               <button
